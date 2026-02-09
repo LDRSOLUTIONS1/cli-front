@@ -1,0 +1,64 @@
+import React, { useContext, useEffect } from "react";
+import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
+import { PrivateRouter } from "./PrivateRouter";
+import AuthContext from "../Context/Auth/AuthContext";
+import LoadingComponent from "../Components/Loading/LoadingComponent";
+import AdminRoutes from "./AdminRoutes";
+
+const AppRouter = () => {
+  const { autenticado, usuarioAutenticado, cargando, loginExterno, errorAuth } =
+    useContext(AuthContext);
+
+  const location = window.location;
+  const params = new URLSearchParams(location.search);
+  const numcolaborador = params.get("numcolaborador");
+  const [showLoader, setShowLoader] = React.useState(true);
+
+  useEffect(() => {
+    if (numcolaborador) {
+      loginExterno(numcolaborador);
+    } else {
+      usuarioAutenticado();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!cargando) {
+      setTimeout(() => setShowLoader(false), 800);
+    }
+  }, [cargando]);
+
+  if (showLoader) {
+    return <LoadingComponent loading={cargando} />;
+  }
+
+  if (!autenticado && errorAuth) {
+    window.location.href = "https://ldrhsys.ldrhumanresources.com/";
+    return null;
+  }
+
+  const rolid = localStorage.getItem("rolid");
+  let PrivateComponent = null;
+
+  if (rolid === "1") PrivateComponent = AdminRoutes;
+
+  return (
+    <Router>
+      <Switch>
+        {autenticado && PrivateComponent && (
+          <Redirect exact from="/" to="/Inicio" />
+        )}
+
+        {PrivateComponent && (
+          <PrivateRouter
+            path="/"
+            component={PrivateComponent}
+            isAuthenticated={autenticado}
+          />
+        )}
+      </Switch>
+    </Router>
+  );
+};
+
+export default AppRouter;
