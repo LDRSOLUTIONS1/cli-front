@@ -1,7 +1,17 @@
-// Errores Api
-export const SHOW_ERRORS_API = "SHOW_ERRORS_API";
 // Auth
 export const OBTENER_USUARIO = "OBTENER_USUARIO";
 export const LOGIN_EXITOSO = "LOGIN_EXITOSO";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 export const CERRAR_SESION = "CERRAR_SESION";
+
+// Clientes
+export const GET_ALL_CLIENTES = "GET_ALL_CLIENTES";
+export const OBTENER_CLIENTE = "OBTENER_CLIENTE";
+
+// Grupos
+export const GET_ALL_GRUPOS = "GET_ALL_GRUPOS";
+export const OBTENER_GRUPO = "OBTENER_GRUPO";
+
+// Tipo Cliente
+export const GET_ALL_TIPO_CLIENTES = "GET_ALL_TIPO_CLIENTES";
+export const OBTENER_TIPO_CLIENTE = "OBTENER_TIPO_CLIENTE";

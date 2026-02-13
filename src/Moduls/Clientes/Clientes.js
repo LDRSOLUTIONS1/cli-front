@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useContext, useEffect } from "react";
+import Layout from "../../Components/Layout/Layout";
+import ClientesContext from "../../Context/Clientes/ClientesContext";
+import TableClientes from "../../Components/Tables/TableClientes";
 
 const Clientes = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const { clientes, GetClientes } = useContext(ClientesContext);
 
-export default Clientes
+  useEffect(() => {
+    GetClientes();
+  }, []);
+  return (
+    <Layout>
+      <TableClientes rows={clientes}/>
+    </Layout>
+  );
+};
+
+export default Clientes;

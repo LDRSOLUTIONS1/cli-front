@@ -31,14 +31,14 @@ function LinearProgressWithLabel({ value }) {
           },
         }}
       />
-
+      
       <Typography
         variant="body2"
         sx={{
           mt: 1,
           fontWeight: 600,
           textAlign: "center",
-          color: value < 100 ? "text.secondary" : "success.main",
+          color: value < 100 ? "#041954" : "#041954",
         }}
       >
         {Math.round(value)}%
@@ -123,7 +123,7 @@ export default function LoadingComponent({ loading }) {
           sx={{
             mb: 2,
             fontWeight: 600,
-            color: showSuccess ? "#041954" : "text.primary",
+            color: showSuccess ? "#041954" : "#041954",
           }}
         >
           {showSuccess ? "¡Todo listo!" : "Cargando información…"}

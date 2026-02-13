@@ -10,7 +10,7 @@ import {
   LOGIN_EXITOSO,
   LOGIN_ERROR,
   CERRAR_SESION,
-} from "../../Types/Index";
+} from "../../types";
 
 const AuthState = (props) => {
   const initialState = {

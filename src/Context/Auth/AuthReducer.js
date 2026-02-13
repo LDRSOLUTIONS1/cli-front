@@ -2,10 +2,9 @@ import {
   OBTENER_USUARIO,
   LOGIN_EXITOSO,
   LOGIN_ERROR,
-  CERRAR_SESION,
-} from "../../Types/Index";
+} from "../../types";
 
-export default (state, action) => {
+const AuthReducer = (state, action) => {
   switch (action.type) {
     case OBTENER_USUARIO:
       return {
@@ -28,15 +27,9 @@ export default (state, action) => {
         cargando: false,
         errorAuth: "No está autenticado",
       };
-    case CERRAR_SESION:
-      return {
-        ...state,
-        token: null,
-        usuario: null,
-        autenticado: false,
-        cargando: false,
-      };
     default:
       return state;
   }
 };
+
+export default AuthReducer;
