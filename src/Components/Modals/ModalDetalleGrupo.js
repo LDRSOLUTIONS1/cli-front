@@ -1,38 +1,27 @@
 import React from "react";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
+  DialogTitle,
   Typography,
   Grid,
   Chip,
   IconButton,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
   Box,
+  Divider,
+  Paper,
+  Stack,
+  useTheme,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { DataGrid } from "@mui/x-data-grid";
+import { esES } from "@mui/x-data-grid/locales";
 import { dateFormatter } from "../../utils/dateFormatter";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: (theme.vars ?? theme).palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
-
-const ModalDetalleGrupo = ({ open, onClose, grupo }) => {
+const ModalDetalleGrupo = ({ modal, handleClose, grupo }) => {
+  const theme = useTheme();
   if (!grupo) return null;
 
   const estadoConfig = {
@@ -45,123 +34,153 @@ const ModalDetalleGrupo = ({ open, onClose, grupo }) => {
     color: "default",
   };
 
+  const InfoItem = ({ label, value }) => (
+    <Box>
+      <Typography
+        variant="caption"
+        sx={{ color: "text.secondary", fontWeight: 500 }}
+      >
+        {label}
+      </Typography>
+
+      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+        {value || "—"}
+      </Typography>
+    </Box>
+  );
+
+  const columnsClientes = [
+    { field: "nombre_comercial", headerName: "NOMBRE COMERCIAL", flex: 1 },
+    { field: "razon_social", headerName: "RAZÓN SOCIAL", flex: 1 },
+    { field: "rfc", headerName: "RFC", flex: 1 },
+    { field: "telefono", headerName: "TELÉFONO", flex: 1 },
+    { field: "plaza", headerName: "PLAZA", flex: 1 },
+  ];
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+    <Dialog
+      open={modal}
+      onClose={handleClose}
+      maxWidth="xl"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+        },
+      }}
+    >
       <DialogTitle
         sx={{
-          backgroundColor: "#041954",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          backgroundColor: "#fff",
+          py: 2,
         }}
       >
-        <Typography sx={{ color: "white" }} variant="h6">
-          Datos del registro
-        </Typography>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box>
+            <Typography variant="h6" fontWeight={700}>
+              Detalle del Grupo
+            </Typography>
 
-        <IconButton onClick={onClose}>
-          <CloseIcon sx={{ color: "white" }} />
-        </IconButton>
+            <Typography variant="body2" color="text.secondary">
+              Código: {grupo.codigo}
+            </Typography>
+          </Box>
+
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Chip
+              label={estado.label}
+              color={estado.color}
+              size="small"
+              icon={
+                estado.label === "Activo" ? <CheckCircleIcon /> : <CancelIcon />
+              }
+            />
+
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
       </DialogTitle>
 
-      <DialogContent dividers>
-        <Box sx={{ width: "100%" }}>
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            <Grid size={6}>
-              <Item>ID:</Item>
+      <DialogContent sx={{ p: 4 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: 2,
+            mb: 4,
+          }}
+        >
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <InfoItem label="ID" value={grupo.id} />
             </Grid>
-            <Grid size={6}>
-              <Item>{grupo.id}</Item>
+
+            <Grid item xs={12} md={4}>
+              <InfoItem label="Nombre" value={grupo.nombre} />
             </Grid>
-            <Grid size={6}>
-              <Item>Código:</Item>
+
+            <Grid item xs={12}>
+              <InfoItem label="Descripción" value={grupo.descripcion} />
             </Grid>
-            <Grid size={6}>
-              <Item>{grupo.codigo}</Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>Nombre:</Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>{grupo.nombre}</Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>Descripción:</Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>{grupo.descripcion}</Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>Fecha de registro:</Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>
-                {grupo?.fecha_registro
-                  ? dateFormatter(grupo.fecha_registro)
-                  : "—"}
-              </Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>Estado:</Item>
-            </Grid>
-            <Grid size={6}>
-              <Item>
-                <Chip
-                  label={estado.label}
-                  color={estado.color}
-                  size="small"
-                  icon={
-                    estado.label === "Activo" ? (
-                      <CheckCircleIcon />
-                    ) : (
-                      <CancelIcon />
-                    )
-                  }
-                  variant="outlined"
-                />
-              </Item>
+
+            <Grid item xs={12} md={4}>
+              <InfoItem
+                label="Fecha de Registro"
+                value={
+                  grupo.fecha_registro
+                    ? dateFormatter(grupo.fecha_registro)
+                    : "—"
+                }
+              />
             </Grid>
           </Grid>
+        </Paper>
+
+        <Box mb={2}>
+          <Typography variant="h6" fontWeight={700}>
+            Clientes Asociados
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary">
+            Total: {grupo.clientes?.length || 0}
+          </Typography>
         </Box>
 
-        <Typography variant="h6" gutterBottom>
-          Clientes del grupo
-        </Typography>
+        <DataGrid
+          rows={grupo.clientes || []}
+          columns={columnsClientes}
+          getRowId={(row) => row.id}
+          autoHeight
+          disableRowSelectionOnClicktd
+          pageSizeOptions={[5, 10]}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 5, page: 0 },
+            },
+          }}
+          localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+          sx={{
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: 2,
 
-        <Table component={Paper} variant="outlined">
-          <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
-            <TableRow>
-              <TableCell>Nombre Comercial</TableCell>
-              <TableCell>Razón Social</TableCell>
-              <TableCell>RFC</TableCell>
-              <TableCell>Teléfono</TableCell>
-              <TableCell>Plaza</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {grupo.clientes && grupo.clientes.length > 0 ? (
-              grupo.clientes.map((cliente) => (
-                <TableRow key={cliente.id}>
-                  <TableCell>{cliente.nombre_comercial}</TableCell>
-                  <TableCell>{cliente.razon_social}</TableCell>
-                  <TableCell>{cliente.rfc}</TableCell>
-                  <TableCell>{cliente.telefono}</TableCell>
-                  <TableCell>{cliente.plaza}</TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5} align="center">
-                  No hay clientes registrados en este grupo
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: theme.palette.grey[100],
+              fontWeight: 600,
+            },
+
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: theme.palette.action.hover,
+            },
+          }}
+        />
       </DialogContent>
     </Dialog>
   );

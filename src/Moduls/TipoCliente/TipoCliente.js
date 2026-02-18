@@ -5,7 +5,6 @@ import TipoClienteContext from "../../Context/TipoCliente/TipoClienteContext";
 
 const TipoCliente = () => {
   const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
-  console.log(tipoClientes, "los tipos clientes");
 
   useEffect(() => {
     GetTipoClientes();

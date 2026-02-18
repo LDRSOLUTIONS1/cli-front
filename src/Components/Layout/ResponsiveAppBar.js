@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
@@ -16,38 +16,33 @@ import MenuIcon from "@mui/icons-material/Menu";
 import PeopleIcon from "@mui/icons-material/People";
 import GroupIcon from "@mui/icons-material/Group";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import PublicIcon from "@mui/icons-material/Public";
-import ContactsIcon from "@mui/icons-material/Contacts";
+import HomeIcon from "@mui/icons-material/Home";
 import BusinessIcon from "@mui/icons-material/Business";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import Logo from "../Layout/Img/LDR-blanco-Logo.png";
+import AuthContext from "../../Context/Auth/AuthContext";
 
 const pages = [
   {
+    label: "Inicio",
+    path: "/",
+    icon: <HomeIcon fontSize="small" />,
+  },
+  {
     label: "Clientes",
-    path: "/clientes",
+    path: "/Clientes",
     icon: <PeopleIcon fontSize="small" />,
   },
   {
     label: "Tipo Clientes",
-    path: "/tipo-clientes",
+    path: "/Tipo-clientes",
     icon: <GroupIcon fontSize="small" />,
   },
   {
     label: "Grupos",
-    path: "/grupos",
+    path: "/Grupos",
     icon: <ApartmentIcon fontSize="small" />,
-  },
-  {
-    label: "Regionales",
-    path: "/regionales",
-    icon: <PublicIcon fontSize="small" />,
-  },
-  {
-    label: "Contactos",
-    path: "/contactos",
-    icon: <ContactsIcon fontSize="small" />,
   },
   {
     label: "LDR Intranet",
@@ -62,7 +57,8 @@ const pages = [
 ];
 
 export default function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const { cerrarSesion } = useContext(AuthContext);
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#041954" }}>

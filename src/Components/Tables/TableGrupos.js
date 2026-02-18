@@ -18,35 +18,58 @@ import { dateFormatter } from "../../utils/dateFormatter";
 
 export default function TableGrupos({ rows = [] }) {
   const { grupo, GetGrupo } = useContext(GruposContext);
-  const [open, setOpen] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  useEffect(() => {
-    if (grupo) {
-      setOpen(true);
-    }
-  }, [grupo]);
-
+  const [openModal, setOpenModal] = useState(false);
+  const handleClickOpen = async (id) => {
+    await GetGrupo(id);
+    setOpenModal(true);
+  };
   const handleClose = () => {
-    setOpen(false);
+    setOpenModal(false);
   };
 
   const columns = [
-    { field: "id", headerName: "ID", flex: 0.5, minWidth: 100 },
-    { field: "codigo", headerName: "CÓDIGO", flex: 1, minWidth: 150 },
-    { field: "nombre", headerName: "NOMBRE", flex: 1, minWidth: 150 },
+    {
+      field: "id",
+      headerName: "ID",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "codigo",
+      headerName: "CÓDIGO",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 150,
+    },
+    {
+      field: "nombre",
+      headerName: "NOMBRE",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 150,
+    },
     {
       field: "descripcion",
       headerName: "DESCRIPCIÓN",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
     },
     {
       field: "fecha_registro",
       headerName: "FECHA REGISTRO",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
       renderCell: (params) => dateFormatter(params.value),
     },
@@ -54,6 +77,8 @@ export default function TableGrupos({ rows = [] }) {
       field: "estado",
       headerName: "ESTADO",
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
       minWidth: 100,
       renderCell: (params) => {
         const estadoConfig = {
@@ -84,12 +109,14 @@ export default function TableGrupos({ rows = [] }) {
       type: "actions",
       headerName: "ACCIÓN",
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
       minWidth: 100,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<VisibilityIcon sx={{ color: "#041954" }} />}
           label="Ver detalles"
-          onClick={() => GetGrupo(params.id)}
+          onClick={() => handleClickOpen(params.id)}
         />,
       ],
     },
@@ -98,11 +125,11 @@ export default function TableGrupos({ rows = [] }) {
   return (
     <>
       <Paper
-        elevation={3}
+        elevation={0}
         sx={{
-          p: 2,
-          borderRadius: 3,
-          overflow: "hidden",
+          p: 3,
+          borderRadius: 4,
+          border: "1px solid #eaeaea",
         }}
       >
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -131,23 +158,58 @@ export default function TableGrupos({ rows = [] }) {
               },
             }}
             slots={{
-              toolbar: GridToolbar,
+              toolbar: () => (
+                <Box
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography fontWeight={600}>Total: {rows.length}</Typography>
+                </Box>
+              ),
             }}
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             sx={{
               border: "none",
+
               "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: "#f5f7fa",
-                fontWeight: "bold",
+                backgroundColor: theme.palette.grey[100],
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                letterSpacing: 0.5,
+                borderBottom: `2px solid ${theme.palette.primary.main}`,
               },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: `2px solid ${theme.palette.primary.main}`,
+              },
+
+              "& .MuiDataGrid-cell": {
+                borderBottom: "2px solid #f0f0f0",
+              },
+
+              "& .MuiDataGrid-columnSeparator": {
+                display: "none",
+              },
+
               "& .MuiDataGrid-row:hover": {
-                backgroundColor: "#f1f5ff",
+                backgroundColor: theme.palette.action.hover,
+                transition: "0.2s ease-in-out",
+              },
+
+              "& .MuiDataGrid-row:nth-of-type(even)": {
+                backgroundColor: "#fafafa",
               },
             }}
           />
         </Box>
       </Paper>
-      <ModalDetalleGrupo open={open} onClose={handleClose} grupo={grupo} />
+      <ModalDetalleGrupo
+        modal={openModal}
+        handleClose={handleClose}
+        grupo={grupo}
+      />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { GET_ALL_CLIENTES } from "../../types";
+import { GET_ALL_CLIENTES, OBTENER_CLIENTE } from "../../types";
 
 const ClientesReducer = (state, action) => {
   switch (action.type) {
@@ -6,6 +6,13 @@ const ClientesReducer = (state, action) => {
       return {
         ...state,
         clientes: action.payload,
+        success: false,
+        ErrorsApi: [],
+      };
+    case OBTENER_CLIENTE:
+      return {
+        ...state,
+        cliente: action.payload,
         success: false,
         ErrorsApi: [],
       };

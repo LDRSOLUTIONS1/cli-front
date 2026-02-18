@@ -17,19 +17,17 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function TableClientes({ rows = [] }) {
   const { cliente, GetCliente } = useContext(ClientesContext);
-  const [open, setOpen] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  useEffect(() => {
-    if (cliente) {
-      setOpen(true);
-    }
-  }, [cliente]);
-
+  const [openModal, setOpenModal] = useState(false);
+  const handleClickOpen = async (id) => {
+    await GetCliente(id);
+    setOpenModal(true);
+  };
   const handleClose = () => {
-    setOpen(false);
+    setOpenModal(false);
   };
 
   const columns = [
@@ -37,12 +35,16 @@ export default function TableClientes({ rows = [] }) {
       field: "id",
       headerName: "ID",
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
       minWidth: 100,
     },
     {
       field: "tipo_persona",
       headerName: "TIPO PERSONA",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
       renderCell: (params) => (params.value === 1 ? "Física" : "Moral"),
     },
@@ -50,6 +52,8 @@ export default function TableClientes({ rows = [] }) {
       field: "nombre_completo",
       headerName: "NOMBRE / RAZÓN SOCIAL",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
       valueGetter: (value, row) => {
         if (row.tipo_persona === 1) {
@@ -62,24 +66,32 @@ export default function TableClientes({ rows = [] }) {
       field: "rfc",
       headerName: "RFC",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
     },
     {
       field: "telefono",
       headerName: "TELÉFONO",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
     },
     {
       field: "correo",
       headerName: "CORREO",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
     },
     {
       field: "estado",
       headerName: "ESTADO",
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
       minWidth: 100,
       renderCell: (params) => {
         const estadoConfig = {
@@ -110,12 +122,14 @@ export default function TableClientes({ rows = [] }) {
       type: "actions",
       headerName: "ACCIÓN",
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
       minWidth: 100,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<VisibilityIcon sx={{ color: "#041954" }} />}
           label="Ver detalles"
-          onClick={() => GetCliente(params.id)}
+          onClick={() => handleClickOpen(params.id)}
         />,
       ],
     },
@@ -123,11 +137,11 @@ export default function TableClientes({ rows = [] }) {
 
   return (
     <Paper
-      elevation={3}
+      elevation={0}
       sx={{
-        p: 2,
-        borderRadius: 3,
-        overflow: "hidden",
+        p: 3,
+        borderRadius: 4,
+        border: "1px solid #eaeaea",
       }}
     >
       <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -156,24 +170,55 @@ export default function TableClientes({ rows = [] }) {
             },
           }}
           slots={{
-            toolbar: GridToolbar,
+            toolbar: () => (
+              <Box
+                sx={{
+                  p: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography fontWeight={600}>Total: {rows.length}</Typography>
+              </Box>
+            ),
           }}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           sx={{
             border: "none",
+
             "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: "#f5f7fa",
-              fontWeight: "bold",
+              backgroundColor: theme.palette.grey[100],
+              fontWeight: 700,
+              fontSize: "0.85rem",
+              letterSpacing: 0.5,
+              borderBottom: `2px solid ${theme.palette.primary.main}`,
             },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: `2px solid ${theme.palette.primary.main}`,
+            },
+
+            "& .MuiDataGrid-cell": {
+              borderBottom: "2px solid #f0f0f0",
+            },
+
+            "& .MuiDataGrid-columnSeparator": {
+              display: "none",
+            },
+
             "& .MuiDataGrid-row:hover": {
-              backgroundColor: "#f1f5ff",
+              backgroundColor: theme.palette.action.hover,
+              transition: "0.2s ease-in-out",
+            },
+
+            "& .MuiDataGrid-row:nth-of-type(even)": {
+              backgroundColor: "#fafafa",
             },
           }}
         />
       </Box>
       <ModalDetalleCliente
-        open={open}
-        onClose={handleClose}
+        modal={openModal}
+        handleClose={handleClose}
         cliente={cliente}
       />
     </Paper>

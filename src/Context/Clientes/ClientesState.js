@@ -3,7 +3,7 @@ import ClientesContext from "./ClientesContext";
 import ClientesReducer from "./ClientesReducer";
 import MethodGet from "../../Config/Service";
 import Swal from "sweetalert2";
-import { GET_ALL_CLIENTES } from "../../types";
+import { GET_ALL_CLIENTES, OBTENER_CLIENTE } from "../../types";
 
 const ClientesState = ({ children }) => {
   const initialState = {
@@ -51,6 +51,17 @@ const ClientesState = ({ children }) => {
       .catch(handleError);
   };
 
+  const GetCliente = (id) => {
+    MethodGet(`/clientes/${id}`)
+      .then((res) => {
+        dispatch({
+          type: OBTENER_CLIENTE,
+          payload: res.data,
+        });
+      })
+      .catch(handleError);
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -59,6 +70,7 @@ const ClientesState = ({ children }) => {
         ErrorsApi: state.ErrorsApi,
         success: state.success,
         GetClientes,
+        GetCliente,
       }}
     >
       {children}
