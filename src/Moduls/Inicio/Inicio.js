@@ -1,4 +1,11 @@
-import { Grid, Card, CardContent, Typography, Box } from "@mui/material";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Container,
+} from "@mui/material";
 import Layout from "../../Components/Layout/Layout";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -25,8 +32,6 @@ const Inicio = () => {
       title: "Clientes Internos",
       subtitle: "Gestiona los clientes internos de la organización.",
       icon: <GroupsIcon />,
-      color: "#4F46E5",
-      bgIcon: "rgba(79, 70, 229, 0.12)",
       gradient: "linear-gradient(135deg, #4F46E5, #6366F1)",
       link: "/tipo-clientes",
     },
@@ -34,8 +39,6 @@ const Inicio = () => {
       title: "Clientes Externos",
       subtitle: "Administra los clientes externos.",
       icon: <PublicIcon />,
-      color: "#F43F5E",
-      bgIcon: "rgba(244, 63, 94, 0.12)",
       gradient: "linear-gradient(135deg, #F43F5E, #FB7185)",
       link: "/tipo-clientes",
     },
@@ -43,8 +46,6 @@ const Inicio = () => {
       title: "Clientes Gubernamentales",
       subtitle: "Control de clientes del sector público.",
       icon: <AccountBalanceIcon />,
-      color: "#0EA5E9",
-      bgIcon: "rgba(14, 165, 233, 0.12)",
       gradient: "linear-gradient(135deg, #0EA5E9, #38BDF8)",
       link: "/tipo-clientes",
     },
@@ -52,8 +53,6 @@ const Inicio = () => {
       title: "Clientes Distribuidores",
       subtitle: "Gestión de clientes distribuidores.",
       icon: <LocalShippingIcon />,
-      color: "#9333EA",
-      bgIcon: "rgba(147, 51, 234, 0.12)",
       gradient: "linear-gradient(135deg, #9333EA, #A855F7)",
       link: "/tipo-clientes",
     },
@@ -63,26 +62,25 @@ const Inicio = () => {
     ? [usuario.user.nombres, usuario.user.apellidos].filter(Boolean).join(" ")
     : "";
 
-  const baseCardStyles = {
-    width: "100%",
-    height: 300,
-    borderRadius: 4,
-    p: 1,
-    cursor: "pointer",
-    backdropFilter: "blur(12px) saturate(160%)",
-    background: "rgba(255,255,255,0.35)",
-    border: "1px solid rgba(255,255,255,0.3)",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    transition: "all 0.35s ease",
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+      },
+    },
   };
 
-  const motionVariant = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-    hover: { scale: 1.06, y: -6 },
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.25, 0.8, 0.25, 1],
+      },
+    },
   };
 
   return (
@@ -90,125 +88,125 @@ const Inicio = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          px: 2,
-          py: 4,
-          background: "linear-gradient(145deg, #eef2f3, #dfe9f3)",
-
+          background:
+            "radial-gradient(circle at top left, #e0e7ff, #f8fafc 60%)",
+          py: 8,
         }}
       >
-        <Typography
-          align="center"
-          fontWeight="bold"
-          variant="subtitle1"
-          sx={{
-            mb: 5,
-            color: "#2c3e50",
-            fontFamily: "monospace",
-          }}
-        >
-          Hola {saludo}, {nombreCompleto}. <br />
-          Bienvenido(a) a la Plataforma de Clientes.
-        </Typography>
-
-        <Grid container spacing={3} justifyContent="center">
-          {cardsData.map((card, index) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={3}
-              key={index}
-              display="flex"
-              justifyContent="center"
+        <Container maxWidth="lg">
+          <Box textAlign="center" mb={6}>
+            <Typography
+              variant="h4"
+              fontWeight="700"
+              sx={{
+                background: "linear-gradient(90deg, #041954)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
-              <Link to={card.link} style={{ textDecoration: "none" }}>
-                <Card
-                  component={motion.div}
-                  variants={motionVariant}
-                  initial="hidden"
-                  animate="visible"
-                  whileHover="hover"
-                  transition={{ duration: 0.25 }}
-                  sx={{
-                    ...baseCardStyles,
-                    "&:hover": {
-                      background: card.gradient,
-                      border: "1px solid rgba(255,255,255,0.6)",
-                      boxShadow: "0 12px 28px rgba(0,0,0,0.22)",
-                    },
-                  }}
-                >
-                  <CardContent
+              {saludo}, {nombreCompleto}
+            </Typography>
+
+            <Typography
+              variant="subtitle1"
+              sx={{ color: "text.secondary", mt: 1 }}
+            >
+              Bienvenido a la Plataforma de Gestión de Clientes
+            </Typography>
+          </Box>
+
+          <Grid
+            container
+            spacing={4}
+            justifyContent="center"
+            alignItems="center"
+            component={motion.div}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {cardsData.map((card, index) => (
+              <Grid
+                item
+                key={index}
+                display="flex"
+                justifyContent="center"
+                component={motion.div}
+                variants={cardVariants}
+              >
+                <Link to={card.link} style={{ textDecoration: "none" }}>
+                  <Card
+                    whileHover={{ y: -8 }}
+                    transition={{ duration: 0.3 }}
                     sx={{
+                      width: 260,
+                      height: 260,
+                      borderRadius: 4,
+                      background: "rgba(255,255,255,0.6)",
+                      backdropFilter: "blur(16px)",
+                      border: "1px solid rgba(255,255,255,0.4)",
+                      boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
                       display: "flex",
                       flexDirection: "column",
-                      alignItems: "center",
-                      textAlign: "center",
-                      gap: 2,
-
-                      "& svg": {
-                        fontSize: 40,
-                        color: card.color,
-                        transition: "all 0.35s ease",
-                      },
-
-                      "&:hover .iconContainer": {
-                        background: "rgba(255,255,255,0.2)",
-                        transform: "scale(1.1)",
-                      },
-
-                      "&:hover svg": {
-                        color: "white",
-                      },
-                      ".title": {
-                        fontWeight: "bold",
-                        color: "#1f2937",
-                        transition: "all 0.35s ease",
-                      },
-                      ".subtitle": {
-                        color: "#4b5563",
-                        transition: "all 0.35s ease",
-                      },
-
-                      "&:hover .title, &:hover .subtitle": {
-                        color: "white",
-                        textShadow: "0 0 4px rgba(0,0,0,0.25)",
+                      overflow: "hidden",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
                       },
                     }}
                   >
                     <Box
                       sx={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: "50%",
+                        height: 6,
+                        width: "100%",
+                        background: card.gradient,
+                      }}
+                    />
+
+                    <CardContent
+                      sx={{
+                        flex: 1,
                         display: "flex",
+                        flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
-                        background: card.bgIcon,
-                        transition: "all 0.35s ease",
+                        textAlign: "center",
+                        gap: 2,
                       }}
-                      className="iconContainer"
                     >
-                      {card.icon}
-                    </Box>
+                      <Box
+                        sx={{
+                          width: 70,
+                          height: 70,
+                          borderRadius: "18px",
+                          background: card.gradient,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "white",
+                          boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+                        }}
+                      >
+                        {card.icon}
+                      </Box>
 
-                    <Typography variant="h6" className="title">
-                      {card.title}
-                    </Typography>
+                      <Typography variant="h6" fontWeight="600">
+                        {card.title}
+                      </Typography>
 
-                    <Typography
-                      variant="body2"
-                      className="subtitle"
-                      sx={{ maxWidth: 240 }}
-                    >
-                      {card.subtitle}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Link>
-            </Grid>
-          ))}
-        </Grid>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary", maxWidth: 220 }}
+                      >
+                        {card.subtitle}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </Box>
     </Layout>
   );

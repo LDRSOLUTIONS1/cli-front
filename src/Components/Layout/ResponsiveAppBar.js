@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState, useCallback } from "react";
+import { Link, useHistory } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -23,12 +23,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Logo from "../Layout/Img/LDR-blanco-Logo.png";
 import AuthContext from "../../Context/Auth/AuthContext";
 
-const pages = [
-  {
-    label: "Inicio",
-    path: "/",
-    icon: <HomeIcon fontSize="small" />,
-  },
+const navigation = [
+  { label: "Inicio", path: "/", icon: <HomeIcon fontSize="small" /> },
   {
     label: "Clientes",
     path: "/Clientes",
@@ -46,12 +42,13 @@ const pages = [
   },
   {
     label: "LDR Intranet",
-    path: "/intranet",
+    external:
+      "https://ldrhsys.ldrhumanresources.com/Cliente/interfaces/Inicio.php",
     icon: <BusinessIcon fontSize="small" />,
   },
   {
     label: "Cerrar Sesión",
-    path: "/cerrar-sesion",
+    action: "logout",
     icon: <LogoutIcon fontSize="small" />,
   },
 ];
@@ -59,6 +56,30 @@ const pages = [
 export default function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const { cerrarSesion } = useContext(AuthContext);
+  const history = useHistory();
+
+  const handleCloseMenu = () => setAnchorElNav(null);
+
+  const handleItemClick = useCallback(
+    (item) => {
+      handleCloseMenu();
+
+      if (item.action === "logout") {
+        cerrarSesion();
+        return;
+      }
+
+      if (item.external) {
+        window.location.href = item.external;
+        return;
+      }
+
+      if (item.path) {
+        history.push(item.path);
+      }
+    },
+    [cerrarSesion, history],
+  );
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#041954" }}>
@@ -72,6 +93,7 @@ export default function ResponsiveAppBar() {
             alignItems: "center",
           }}
         >
+          {/* Logo */}
           <Box sx={{ display: "flex", alignItems: "center", ml: 4 }}>
             <img src={Logo} alt="Logo" style={{ height: 42 }} />
           </Box>
@@ -85,24 +107,23 @@ export default function ResponsiveAppBar() {
               gap: 1,
             }}
           >
-            {pages.map((page) => (
+            {navigation.map((item) => (
               <Button
-                key={page.label}
-                component={Link}
-                to={page.path}
-                startIcon={page.icon}
+                key={item.label}
+                onClick={() => handleItemClick(item)}
+                startIcon={item.icon}
                 sx={{
                   color: "#fff",
                   textTransform: "none",
-                  fontSize: "0.80rem",
+                  fontSize: "0.85rem",
                   fontWeight: 400,
-                  padding: "6px 10px",
+                  px: 1.5,
                   "&:hover": {
-                    backgroundColor: "rgba(8, 6, 6, 0.12)",
+                    backgroundColor: "rgba(255,255,255,0.1)",
                   },
                 }}
               >
-                {page.label}
+                {item.label}
               </Button>
             ))}
           </Box>
@@ -120,21 +141,19 @@ export default function ResponsiveAppBar() {
             <Menu
               anchorEl={anchorElNav}
               open={Boolean(anchorElNav)}
-              onClose={() => setAnchorElNav(null)}
+              onClose={handleCloseMenu}
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-              {pages.map((page) => (
+              {navigation.map((item) => (
                 <MenuItem
-                  key={page.label}
-                  component={Link}
-                  to={page.path}
-                  onClick={() => setAnchorElNav(null)}
+                  key={item.label}
+                  onClick={() => handleItemClick(item)}
                   sx={{ fontSize: "0.85rem" }}
                 >
-                  <ListItemIcon sx={{ minWidth: 32 }}>{page.icon}</ListItemIcon>
+                  <ListItemIcon sx={{ minWidth: 32 }}>{item.icon}</ListItemIcon>
                   <ListItemText
-                    primary={page.label}
+                    primary={item.label}
                     primaryTypographyProps={{ fontSize: "0.85rem" }}
                   />
                 </MenuItem>
