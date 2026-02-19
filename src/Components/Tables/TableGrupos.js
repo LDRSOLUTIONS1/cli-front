@@ -80,6 +80,11 @@ export default function TableGrupos({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
+      type: "singleSelect",
+      valueOptions: [
+        { value: 1, label: "Inactivo" },
+        { value: 2, label: "Activo" },
+      ],
       renderCell: (params) => {
         const estadoConfig = {
           1: { label: "Inactivo", color: "error" },

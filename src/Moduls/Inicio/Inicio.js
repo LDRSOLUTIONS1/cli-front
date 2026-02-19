@@ -58,9 +58,9 @@ const Inicio = () => {
     },
   ];
 
-  const nombreCompleto = usuario
-    ? [usuario.user.nombres, usuario.user.apellidos].filter(Boolean).join(" ")
-    : "";
+  const nombreCompleto = [usuario?.user?.nombres, usuario?.user?.apellidos]
+    .filter(Boolean)
+    .join(" ");
 
   const containerVariants = {
     hidden: {},

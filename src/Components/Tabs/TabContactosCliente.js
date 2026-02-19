@@ -20,7 +20,7 @@ const TabContactosCliente = ({ contactos = [] }) => {
     {
       field: "puesto_nombre",
       headerName: "PUESTO",
-      flex: 0.5,
+      flex: 1,
     },
     {
       field: "departamento_nombre",
@@ -30,17 +30,28 @@ const TabContactosCliente = ({ contactos = [] }) => {
     {
       field: "nombre",
       headerName: "NOMBRE DE CONTACTO",
-      flex: 1,
+      flex: 1.5,
+      renderCell: (params) => (
+        <Box>
+          <Typography variant="caption" gutterBottom sx={{ display: 'block' }}>
+            {params.row?.nombre}
+          </Typography>
+          <Typography variant="caption" gutterBottom sx={{ display: 'block' }}>
+            {params.row?.distribuidor?.nombre_comercial}
+          </Typography>
+        </Box>
+      ),
     },
+
     {
       field: "correo",
       headerName: "CORREO",
-      flex: 1,
+      flex: 2,
     },
     {
       field: "extension",
       headerName: "EXTENSION",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "telefono",
@@ -50,10 +61,10 @@ const TabContactosCliente = ({ contactos = [] }) => {
     {
       field: "estatus",
       headerName: "ESTATUS",
-      flex: 1,
+      flex: 0.5,
     },
   ];
-
+  
   return (
     <Box>
       <Box mb={2}>

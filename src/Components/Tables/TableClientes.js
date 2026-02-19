@@ -45,7 +45,7 @@ export default function TableClientes({ rows = [] }) {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: "tipo_negocio",
@@ -53,7 +53,20 @@ export default function TableClientes({ rows = [] }) {
       flex: 1,
       align: "center",
       headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "tipo_persona",
+      headerName: "TIPO DE PERSONA",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
+      type: "singleSelect",
+      valueOptions: [
+        { value: 1, label: "Persona Física" },
+        { value: 2, label: "Persona Moral" },
+      ],
     },
     {
       field: "nombre_comercial",
@@ -61,7 +74,7 @@ export default function TableClientes({ rows = [] }) {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: "razon_social",
@@ -69,7 +82,7 @@ export default function TableClientes({ rows = [] }) {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: "region",
@@ -77,7 +90,7 @@ export default function TableClientes({ rows = [] }) {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: "plaza",
@@ -85,7 +98,7 @@ export default function TableClientes({ rows = [] }) {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: "estado",
@@ -94,6 +107,11 @@ export default function TableClientes({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
+      type: "singleSelect",
+      valueOptions: [
+        { value: 1, label: "Inactivo" },
+        { value: 2, label: "Activo" },
+      ],
       renderCell: (params) => {
         const estadoConfig = {
           1: { label: "Inactivo", color: "error" },
