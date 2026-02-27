@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import React from "react";
+import { dateFormatter } from "../../utils/dateFormatter";
 
 const TabInformacionCliente = ({ cliente }) => {
   if (!cliente) return null;
@@ -179,7 +180,7 @@ const TabInformacionCliente = ({ cliente }) => {
             <TableCell>
               <strong>Fecha de registro</strong>
             </TableCell>
-            <TableCell>{cliente.fecha_registro}</TableCell>
+            <TableCell>{dateFormatter(cliente.fecha_registro)}</TableCell>
           </TableRow>
 
           <TableRow>

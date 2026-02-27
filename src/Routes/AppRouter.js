@@ -1,5 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { PrivateRouter } from "./PrivateRouter";
 import AuthContext from "../Context/Auth/AuthContext";
 import LoadingComponent from "../Components/Loading/LoadingComponent";
@@ -44,19 +49,23 @@ const AppRouter = () => {
 
   return (
     <Router>
-      <Switch>
+      <Routes>
         {autenticado && PrivateComponent && (
-          <Redirect exact from="/" to="/Inicio" />
+          <Route path="/" element={<Navigate to="/Inicio" replace />} />
         )}
 
         {PrivateComponent && (
-          <PrivateRouter
-            path="/"
-            component={PrivateComponent}
-            isAuthenticated={autenticado}
+          <Route
+            path="/*"
+            element={
+              <PrivateRouter
+                component={PrivateComponent}
+                isAuthenticated={autenticado}
+              />
+            }
           />
         )}
-      </Switch>
+      </Routes>
     </Router>
   );
 };

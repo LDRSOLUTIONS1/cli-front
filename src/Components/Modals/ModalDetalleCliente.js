@@ -54,7 +54,6 @@ const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
       <DialogTitle
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: "#fff",
           py: 2,
         }}
       >

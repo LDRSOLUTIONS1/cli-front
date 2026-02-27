@@ -1,22 +1,12 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-export const PrivateRouter = ({
-  isAuthenticated,
-  component: Component,
-  ...rest
-}) => {
-  localStorage.setItem("lastPath", rest.location.pathname);
+export const PrivateRouter = ({ isAuthenticated, component: Component }) => {
+  const lastPath = window.location.pathname;
+  localStorage.setItem("lastPath", lastPath);
 
-  return (
-    <Route
-      {...rest}
-      component={(props) =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/" />
-      }
-    />
-  );
+  return isAuthenticated ? <Component /> : <Navigate to="/" replace />;
 };
 
 PrivateRouter.propTypes = {

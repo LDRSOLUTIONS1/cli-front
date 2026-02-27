@@ -1,167 +1,221 @@
-import React, { useContext, useState, useCallback } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   AppBar,
   Box,
   Toolbar,
   IconButton,
-  Menu,
-  MenuItem,
-  Button,
+  Drawer,
+  SwipeableDrawer,
+  List,
+  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
+  useTheme,
+  useMediaQuery,
+  Divider,
+  Typography,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import PeopleIcon from "@mui/icons-material/People";
 import GroupIcon from "@mui/icons-material/Group";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import HomeIcon from "@mui/icons-material/Home";
 import BusinessIcon from "@mui/icons-material/Business";
 import LogoutIcon from "@mui/icons-material/Logout";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 
 import Logo from "../Layout/Img/LDR-blanco-Logo.png";
 import AuthContext from "../../Context/Auth/AuthContext";
 
-const navigation = [
-  { label: "Inicio", path: "/", icon: <HomeIcon fontSize="small" /> },
-  {
-    label: "Clientes",
-    path: "/Clientes",
-    icon: <PeopleIcon fontSize="small" />,
-  },
+const drawerWidth = 240;
+const collapsedWidth = 72;
+
+const MENU_ITEMS = [
+  { label: "Inicio", type: "internal", path: "/", icon: HomeIcon },
+  { label: "Marcas", type: "internal", path: "/Marcas", icon: LocalOfferIcon },
+  { label: "Clientes", type: "internal", path: "/Clientes", icon: PeopleIcon },
   {
     label: "Tipo Clientes",
+    type: "internal",
     path: "/Tipo-clientes",
-    icon: <GroupIcon fontSize="small" />,
+    icon: GroupIcon,
   },
+  { label: "Grupos", type: "internal", path: "/Grupos", icon: ApartmentIcon },
   {
-    label: "Grupos",
-    path: "/Grupos",
-    icon: <ApartmentIcon fontSize="small" />,
+    label: "Regionales",
+    type: "internal",
+    path: "/Regionales",
+    icon: ApartmentIcon,
+  },
+  { label: "Modelos", type: "internal", path: "/Modelos", icon: BusinessIcon },
+  {
+    label: "Contactos",
+    type: "internal",
+    path: "/Contactos",
+    icon: BusinessIcon,
+  },
+  { label: "Puestos", type: "internal", path: "/Puestos", icon: BusinessIcon },
+  {
+    label: "Departamentos",
+    type: "internal",
+    path: "/Departamentos",
+    icon: BusinessIcon,
   },
   {
     label: "LDR Intranet",
-    external:
-      "https://ldrhsys.ldrhumanresources.com/Cliente/interfaces/Inicio.php",
-    icon: <BusinessIcon fontSize="small" />,
+    type: "external",
+    url: "https://ldrhsys.ldrhumanresources.com/Cliente/interfaces/Inicio.php",
+    icon: BusinessIcon,
   },
   {
     label: "Cerrar Sesión",
+    type: "action",
     action: "logout",
-    icon: <LogoutIcon fontSize="small" />,
+    icon: LogoutIcon,
   },
 ];
 
 export default function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = useState(null);
   const { cerrarSesion } = useContext(AuthContext);
   const history = useHistory();
+  const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const handleCloseMenu = () => setAnchorElNav(null);
+  const [open, setOpen] = useState(true);
 
-  const handleItemClick = useCallback(
-    (item) => {
-      handleCloseMenu();
+  const handleNavigation = (item) => {
+    if (isMobile) setOpen(false);
 
-      if (item.action === "logout") {
-        cerrarSesion();
-        return;
-      }
+    if (item.type === "internal") history.push(item.path);
+    if (item.type === "external") window.open(item.url, "_blank");
+    if (item.type === "action" && item.action === "logout") cerrarSesion();
+  };
 
-      if (item.external) {
-        window.location.href = item.external;
-        return;
-      }
+  const DrawerContent = (
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      {/* Toggle button desktop */}
+      {!isMobile && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
+          <IconButton onClick={() => setOpen(!open)}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Box>
+      )}
 
-      if (item.path) {
-        history.push(item.path);
-      }
-    },
-    [cerrarSesion, history],
-  );
+      <Divider />
 
-  return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#041954" }}>
-      <Toolbar sx={{ minHeight: 60 }}>
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: 1200,
-            mx: "auto",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {/* Logo */}
-          <Box sx={{ display: "flex", alignItems: "center", ml: 4 }}>
-            <img src={Logo} alt="Logo" style={{ height: 42 }} />
-          </Box>
+      <List sx={{ flexGrow: 1 }}>
+        {MENU_ITEMS.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
 
-          {/* MENÚ DESKTOP */}
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              ml: 8,
-              gap: 1,
-            }}
-          >
-            {navigation.map((item) => (
-              <Button
-                key={item.label}
-                onClick={() => handleItemClick(item)}
-                startIcon={item.icon}
+          return (
+            <ListItem key={item.label} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                onClick={() => handleNavigation(item)}
+                selected={isActive}
                 sx={{
-                  color: "#fff",
-                  textTransform: "none",
-                  fontSize: "0.85rem",
-                  fontWeight: 400,
-                  px: 1.5,
-                  "&:hover": {
-                    backgroundColor: "rgba(255,255,255,0.1)",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                  "&.Mui-selected": {
+                    backgroundColor: "rgba(4,25,84,0.12)",
+                    borderRight: "4px solid #041954",
                   },
                 }}
               >
-                {item.label}
-              </Button>
-            ))}
-          </Box>
-
-          {/* MENÚ MOBILE */}
-          <Box sx={{ display: { xs: "flex", md: "none" }, ml: "auto" }}>
-            <IconButton
-              color="inherit"
-              size="small"
-              onClick={(e) => setAnchorElNav(e.currentTarget)}
-            >
-              <MenuIcon fontSize="small" />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorElNav}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseMenu}
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-            >
-              {navigation.map((item) => (
-                <MenuItem
-                  key={item.label}
-                  onClick={() => handleItemClick(item)}
-                  sx={{ fontSize: "0.85rem" }}
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 2 : "auto",
+                    justifyContent: "center",
+                    color: isActive ? "#041954" : "inherit",
+                  }}
                 >
-                  <ListItemIcon sx={{ minWidth: 32 }}>{item.icon}</ListItemIcon>
-                  <ListItemText
-                    primary={item.label}
-                    primaryTypographyProps={{ fontSize: "0.85rem" }}
-                  />
-                </MenuItem>
-              ))}
-            </Menu>
+                  <Icon />
+                </ListItemIcon>
+
+                <ListItemText
+                  primary={item.label}
+                  sx={{
+                    opacity: open ? 1 : 0,
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+      </List>
+    </Box>
+  );
+
+  return (
+    <>
+      {/* APPBAR */}
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: "#041954",
+          transition: theme.transitions.create(["margin", "width"]),
+          ...(open &&
+            !isMobile && {
+              width: `calc(100% - ${open ? drawerWidth : collapsedWidth}px)`,
+              ml: `${open ? drawerWidth : collapsedWidth}px`,
+            }),
+        }}
+      >
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          {isMobile && (
+            <IconButton color="inherit" onClick={() => setOpen(true)}>
+              <MenuIcon />
+            </IconButton>
+          )}
+
+          <Box
+            sx={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <img src={Logo} alt="Logo" style={{ height: 42 }} />
           </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+
+      {/* DRAWER */}
+      {isMobile ? (
+        <SwipeableDrawer
+          anchor="left"
+          open={open}
+          onClose={() => setOpen(false)}
+          onOpen={() => setOpen(true)}
+        >
+          {DrawerContent}
+        </SwipeableDrawer>
+      ) : (
+        <Drawer
+          variant="permanent"
+          open={open}
+          sx={{
+            width: open ? drawerWidth : collapsedWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: open ? drawerWidth : collapsedWidth,
+              transition: theme.transitions.create("width"),
+              overflowX: "hidden",
+            },
+          }}
+        >
+          {DrawerContent}
+        </Drawer>
+      )}
+    </>
   );
 }

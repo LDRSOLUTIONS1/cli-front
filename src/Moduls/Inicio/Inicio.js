@@ -30,28 +30,24 @@ const Inicio = () => {
   const cardsData = [
     {
       title: "Clientes Internos",
-      subtitle: "Gestiona los clientes internos de la organización.",
       icon: <GroupsIcon />,
       gradient: "linear-gradient(135deg, #4F46E5, #6366F1)",
       link: "/tipo-clientes",
     },
     {
       title: "Clientes Externos",
-      subtitle: "Administra los clientes externos.",
       icon: <PublicIcon />,
       gradient: "linear-gradient(135deg, #F43F5E, #FB7185)",
       link: "/tipo-clientes",
     },
     {
       title: "Clientes Gubernamentales",
-      subtitle: "Control de clientes del sector público.",
       icon: <AccountBalanceIcon />,
       gradient: "linear-gradient(135deg, #0EA5E9, #38BDF8)",
       link: "/tipo-clientes",
     },
     {
       title: "Clientes Distribuidores",
-      subtitle: "Gestión de clientes distribuidores.",
       icon: <LocalShippingIcon />,
       gradient: "linear-gradient(135deg, #9333EA, #A855F7)",
       link: "/tipo-clientes",
@@ -88,22 +84,12 @@ const Inicio = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          background:
-            "radial-gradient(circle at top left, #e0e7ff, #f8fafc 60%)",
-          py: 8,
+          py: 10,
         }}
       >
         <Container maxWidth="lg">
           <Box textAlign="center" mb={6}>
-            <Typography
-              variant="h4"
-              fontWeight="700"
-              sx={{
-                background: "linear-gradient(90deg, #041954)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
+            <Typography variant="h4" fontWeight="700">
               {saludo}, {nombreCompleto}
             </Typography>
 
@@ -169,9 +155,10 @@ const Inicio = () => {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        justifyContent: "center",
                         textAlign: "center",
+                        justifyContent: "flex-start",
                         gap: 2,
+                        pt: 5,
                       }}
                     >
                       <Box
@@ -190,7 +177,16 @@ const Inicio = () => {
                         {card.icon}
                       </Box>
 
-                      <Typography variant="h6" fontWeight="600">
+                      <Typography
+                        variant="h6"
+                        fontWeight="600"
+                        sx={{
+                          minHeight: 56,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
                         {card.title}
                       </Typography>
 

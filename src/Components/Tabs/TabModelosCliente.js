@@ -12,19 +12,14 @@ const TabModelosCliente = ({ modelos = [] }) => {
 
   const columns = [
     {
-      field: "idlineaproducto",
-      headerName: "ID LÍNEA DE PRODUCTO",
+      field: "id",
+      headerName: "ID MODELO",
       flex: 0.7,
     },
     {
-      field: "cve_linea_producto",
-      headerName: "CVE LÍNEA DE PRODUCTO",
+      field: "nombre",
+      headerName: "Nombre del modelo",
       flex: 1,
-    },
-    {
-      field: "descripcion",
-      headerName: "DESCRIPCIÓN",
-      flex: 1.5,
     },
   ];
 

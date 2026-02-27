@@ -1,9 +1,19 @@
 import React, { useReducer } from "react";
 import TipoClienteContext from "./TipoClienteContext";
 import TipoClienteReducer from "./TipoClienteReducer";
-import MethodGet from "../../Config/Service";
+import MethodGet, {
+  MethodDelete,
+  MethodPost,
+  MethodPut,
+} from "../../Config/Service";
 import Swal from "sweetalert2";
-import { GET_ALL_TIPO_CLIENTES, OBTENER_TIPO_CLIENTE } from "../../types";
+import {
+  GET_ALL_TIPO_CLIENTES,
+  OBTENER_TIPO_CLIENTE,
+  ADD_TIPO_CLIENTES,
+  UPDATE_TIPO_CLIENTES,
+  DELETE_TIPO_CLIENTES,
+} from "../../types";
 
 const TipoClienteState = ({ children }) => {
   const initialState = {
@@ -16,27 +26,20 @@ const TipoClienteState = ({ children }) => {
   const [state, dispatch] = useReducer(TipoClienteReducer, initialState);
 
   const handleError = (error) => {
-    const data = error.response?.data;
+    if (!error.response) {
+      Swal.fire("Error", "Error de conexión con el servidor", "error");
+      return;
+    }
 
-    if (data?.errors) {
+    const { status, data } = error.response;
+
+    if (status === 422 && data.errors) {
       const mensajes = Object.values(data.errors).flat().join("\n");
-      Swal.fire({
-        title: "Error de validación",
-        icon: "warning",
-        text: mensajes,
-      });
-    } else if (data?.mensaje) {
-      Swal.fire({
-        title: data.error || "Error",
-        icon: "error",
-        text: data.mensaje,
-      });
+      Swal.fire("Error de validación", mensajes, "warning");
+    } else if (data.message) {
+      Swal.fire("Error", data.message, "error");
     } else {
-      Swal.fire({
-        title: "Error",
-        icon: "error",
-        text: "Ocurrió un error inesperado",
-      });
+      Swal.fire("Error", "Ocurrió un error inesperado", "error");
     }
   };
 
@@ -62,6 +65,61 @@ const TipoClienteState = ({ children }) => {
       .catch(handleError);
   };
 
+  const CreateTipoClientes = (data) => {
+    MethodPost("/tipos-clientes", data)
+      .then((res) => {
+        dispatch({ type: ADD_TIPO_CLIENTES, payload: res.data });
+        Swal.fire({
+          title: "Éxito",
+          text: "Tipo de cliente agregado con éxito",
+          icon: "success",
+        });
+        GetTipoClientes();
+      })
+      .catch(handleError);
+  };
+
+  const UpdateTipoClientes = (data) => {
+    MethodPut(`/tipos-clientes/${data.id}`, data)
+      .then((res) => {
+        dispatch({ type: UPDATE_TIPO_CLIENTES, payload: res.data });
+        Swal.fire({
+          title: "Éxito",
+          text: "Tipo de cliente actualizado con éxito",
+          icon: "success",
+        });
+        GetTipoClientes();
+      })
+      .catch(handleError);
+  };
+
+  const DeleteTipoClientes = (id) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "El tipo de cliente seleccionado será eliminado",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "No, volver",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        MethodDelete(`/tipos-clientes/${id}`)
+          .then((res) => {
+            dispatch({ type: DELETE_TIPO_CLIENTES, payload: id });
+            Swal.fire({
+              title: "Eliminado",
+              text: res.data.mensaje,
+              icon: "success",
+            });
+            GetTipoClientes();
+          })
+          .catch(handleError);
+      }
+    });
+  };
+
   return (
     <TipoClienteContext.Provider
       value={{
@@ -71,6 +129,9 @@ const TipoClienteState = ({ children }) => {
         success: state.success,
         GetTipoClientes,
         GetTipoCliente,
+        CreateTipoClientes,
+        UpdateTipoClientes,
+        DeleteTipoClientes,
       }}
     >
       {children}
@@ -79,6 +140,3 @@ const TipoClienteState = ({ children }) => {
 };
 
 export default TipoClienteState;
-
-
-

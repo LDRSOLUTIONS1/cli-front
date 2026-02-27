@@ -72,7 +72,6 @@ const ModalDetalleTipoCliente = ({ modal, handleClose, tipoCliente }) => {
       <DialogTitle
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: "#fff",
           py: 2,
         }}
       >
@@ -159,7 +158,7 @@ const ModalDetalleTipoCliente = ({ modal, handleClose, tipoCliente }) => {
           pageSizeOptions={[5, 10]}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 5, page: 0 },
+              paginationModel: { pageSize: 6, page: 0 },
             },
           }}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}

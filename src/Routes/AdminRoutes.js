@@ -1,21 +1,35 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom/cjs/react-router-dom.min";
+import { Routes, Route } from "react-router-dom";
+
 import NoResultados from "../Components/Layout/NoResultados";
 import Inicio from "../Moduls/Inicio/Inicio";
 import Clientes from "../Moduls/Clientes/Clientes";
 import TipoCliente from "../Moduls/TipoCliente/TipoCliente";
 import Grupos from "../Moduls/Grupos/Grupos";
+import Marcas from "../Moduls/Marcas/Marcas";
+import Regionales from "../Moduls/Regionales/Regionales";
+import Modelos from "../Moduls/Modelos/Modelos";
+import Contactos from "../Moduls/Contactos/Contactos";
+import Puestos from "../Moduls/Puestos/Puestos";
+import Departamentos from "../Moduls/Departamentos/Departamentos";
 
 const AdminRoutes = () => {
   return (
-    <Switch>
-      <Route exact path="/Inicio" component={Inicio} />
-      <Route exact path="/Clientes" component={Clientes} />
-      <Route exact path="/Tipo-clientes" component={TipoCliente} />
-      <Route exact path="/Grupos" component={Grupos} />
-      <Route exact path="/no-resultados" component={NoResultados} />
-      <Route component={NoResultados} />
-    </Switch>
+    <Routes>
+      <Route path="/Inicio" element={<Inicio />} />
+      <Route path="/Marcas" element={<Marcas />} />
+      <Route path="/Clientes" element={<Clientes />} />
+      <Route path="/Tipo-clientes" element={<TipoCliente />} />
+      <Route path="/Grupos" element={<Grupos />} />
+      <Route path="/Regionales" element={<Regionales />} />
+      <Route path="/Modelos" element={<Modelos />} />
+      <Route path="/Contactos" element={<Contactos />} />
+      <Route path="/Puestos" element={<Puestos />} />
+      <Route path="/Departamentos" element={<Departamentos />} />
+
+      <Route path="/no-resultados" element={<NoResultados />} />
+      <Route path="*" element={<NoResultados />} />
+    </Routes>
   );
 };
 

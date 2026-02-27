@@ -1,23 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  Chip,
-  Paper,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import React, { useContext, useState } from "react";
+import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { DataGrid, GridToolbar, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { esES } from "@mui/x-data-grid/locales";
 import ModalDetalleTipoCliente from "../Modals/ModalDetalleTipoCliente";
 import TipoClienteContext from "../../Context/TipoCliente/TipoClienteContext";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { dateFormatter } from "../../utils/dateFormatter";
+import { EstadoChip } from "../../utils/EstadoChip";
+import { Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import AddTipoCliente from "../../Moduls/TipoCliente/AddTipoCliente";
+import EditTipoCliente from "../../Moduls/TipoCliente/EditTipoCliente";
 
 export default function TableGrupos({ rows = [] }) {
-  const { tipoCliente, GetTipoCliente } = useContext(TipoClienteContext);
+  const { tipoCliente, GetTipoCliente, DeleteTipoClientes } =
+    useContext(TipoClienteContext);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -29,6 +28,26 @@ export default function TableGrupos({ rows = [] }) {
   };
   const handleClose = () => {
     setOpenModal(false);
+  };
+
+  const [modalUpdate, OpenModalUpdate] = useState(false);
+  const [id_tipoCliente, saveIdTipoCliente] = useState(null);
+  const handleClickOpenEdit = (id) => {
+    OpenModalUpdate(true);
+    saveIdTipoCliente(id);
+  };
+  const handleClickCloseEdit = () => {
+    OpenModalUpdate(false);
+    saveIdTipoCliente(null);
+  };
+
+  const [modalAdd, setOpenModalAdd] = useState(false);
+  const handleClickOpenAdd = () => {
+    setOpenModalAdd(true);
+  };
+
+  const handleClickCloseAdd = () => {
+    setOpenModalAdd(false);
   };
 
   const columns = [
@@ -72,34 +91,7 @@ export default function TableGrupos({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      type: "singleSelect",
-      valueOptions: [
-        { value: 1, label: "Inactivo" },
-        { value: 2, label: "Activo" },
-      ],
-      renderCell: (params) => {
-        const estadoConfig = {
-          1: { label: "Inactivo", color: "error" },
-          2: { label: "Activo", color: "success" },
-        };
-
-        const config = estadoConfig[params.value] || {
-          label: "Desconocido",
-          color: "default",
-        };
-
-        return (
-          <Chip
-            label={config.label}
-            color={config.color}
-            size="small"
-            icon={
-              config.label === "Activo" ? <CheckCircleIcon /> : <CancelIcon />
-            }
-            variant="outlined"
-          />
-        );
-      },
+      renderCell: (params) => <EstadoChip estado={params.value} />,
     },
     {
       field: "actions",
@@ -109,9 +101,19 @@ export default function TableGrupos({ rows = [] }) {
       minWidth: 100,
       getActions: (params) => [
         <GridActionsCellItem
-          icon={<VisibilityIcon sx={{ color: "#041954" }} />}
+          icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
           label="Ver detalles"
           onClick={() => handleClickOpen(params.id)}
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+          label="Editar"
+          onClick={() => handleClickOpenEdit(params.id)}
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+          label="Eliminar"
+          onClick={() => DeleteTipoClientes(params.id)}
         />,
       ],
     },
@@ -140,6 +142,7 @@ export default function TableGrupos({ rows = [] }) {
           <DataGrid
             rows={rows}
             columns={columns}
+            showToolbar
             autoHeight={isMobile}
             checkboxSelection={!isMobile}
             disableRowSelectionOnClick
@@ -159,9 +162,18 @@ export default function TableGrupos({ rows = [] }) {
                     p: 1,
                     display: "flex",
                     justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
                   <Typography fontWeight={600}>Total: {rows.length}</Typography>
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleClickOpenAdd}
+                    sx={{ borderRadius: 3 }}
+                  >
+                    Nuevo Tipo de Cliente
+                  </Button>
                 </Box>
               ),
             }}
@@ -192,10 +204,6 @@ export default function TableGrupos({ rows = [] }) {
                 backgroundColor: theme.palette.action.hover,
                 transition: "0.2s ease-in-out",
               },
-
-              "& .MuiDataGrid-row:nth-of-type(even)": {
-                backgroundColor: "#fafafa",
-              },
             }}
           />
         </Box>
@@ -205,6 +213,16 @@ export default function TableGrupos({ rows = [] }) {
         handleClose={handleClose}
         tipoCliente={tipoCliente}
       />
+
+      {id_tipoCliente !== null && (
+        <EditTipoCliente
+          open={modalUpdate}
+          handleClose={handleClickCloseEdit}
+          id={id_tipoCliente}
+        />
+      )}
+
+      <AddTipoCliente open={modalAdd} handleClose={handleClickCloseAdd} />
     </>
   );
 }

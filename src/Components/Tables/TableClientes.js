@@ -1,19 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  Chip,
-  Paper,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import React, { useContext, useState } from "react";
+import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { DataGrid, GridToolbar, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { esES } from "@mui/x-data-grid/locales";
 import ClientesContext from "../../Context/Clientes/ClientesContext";
 import ModalDetalleCliente from "../Modals/ModalDetalleCliente";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import { EstadoChip } from "../../utils/EstadoChip";
 
 export default function TableClientes({ rows = [] }) {
   const { cliente, GetCliente } = useContext(ClientesContext);
@@ -107,34 +99,7 @@ export default function TableClientes({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      type: "singleSelect",
-      valueOptions: [
-        { value: 1, label: "Inactivo" },
-        { value: 2, label: "Activo" },
-      ],
-      renderCell: (params) => {
-        const estadoConfig = {
-          1: { label: "Inactivo", color: "error" },
-          2: { label: "Activo", color: "success" },
-        };
-
-        const config = estadoConfig[params.value] || {
-          label: "Desconocido",
-          color: "default",
-        };
-
-        return (
-          <Chip
-            label={config.label}
-            color={config.color}
-            size="small"
-            icon={
-              config.label === "Activo" ? <CheckCircleIcon /> : <CancelIcon />
-            }
-            variant="outlined"
-          />
-        );
-      },
+      renderCell: (params) => <EstadoChip estado={params.value} />,
     },
     {
       field: "actions",
@@ -146,7 +111,7 @@ export default function TableClientes({ rows = [] }) {
       minWidth: 100,
       getActions: (params) => [
         <GridActionsCellItem
-          icon={<VisibilityIcon sx={{ color: "#041954" }} />}
+          icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
           label="Ver detalles"
           onClick={() => handleClickOpen(params.id)}
         />,
@@ -182,7 +147,7 @@ export default function TableClientes({ rows = [] }) {
           pageSizeOptions={[5, 10, 20]}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 7, page: 0 },
+              paginationModel: { pageSize: 6, page: 0 },
             },
             sorting: {
               sortModel: [{ field: "id", sort: "desc" }],
@@ -227,10 +192,6 @@ export default function TableClientes({ rows = [] }) {
             "& .MuiDataGrid-row:hover": {
               backgroundColor: theme.palette.action.hover,
               transition: "0.2s ease-in-out",
-            },
-
-            "& .MuiDataGrid-row:nth-of-type(even)": {
-              backgroundColor: "#fafafa",
             },
           }}
         />
