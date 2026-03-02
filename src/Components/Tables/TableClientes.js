@@ -1,14 +1,40 @@
-import React, { useContext, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { esES } from "@mui/x-data-grid/locales";
+import AddIcon from "@mui/icons-material/Add";
+import { Button } from "@mui/material";
 import ClientesContext from "../../Context/Clientes/ClientesContext";
 import ModalDetalleCliente from "../Modals/ModalDetalleCliente";
 import { EstadoChip } from "../../utils/EstadoChip";
+import EditClientes from "../../Moduls/Clientes/EditClientes";
+import AddClientes from "../../Moduls/Clientes/AddClientes";
+import TipoClienteContext from "../../Context/TipoCliente/TipoClienteContext";
+import RegimenesFiscalesContext from "../../Context/RegimenesFiscales/RegimenesFiscalesContext";
+import GruposContext from "../../Context/Grupos/GruposContext";
+import ModelosContext from "../../Context/Modelos/ModelosContext";
+import RegionalesContext from "../../Context/Regionales/RegionalesContext";
 
 export default function TableClientes({ rows = [] }) {
-  const { cliente, GetCliente } = useContext(ClientesContext);
+  const { cliente, GetCliente, DeleteClientes } = useContext(ClientesContext);
+  const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
+  const { grupos, GetGrupos } = useContext(GruposContext);
+  const { modelos, GetModelos } = useContext(ModelosContext);
+  const { regionales, GetRegionales } = useContext(RegionalesContext);
+  const { regimenesFiscales, GetRegimenesFiscales } = useContext(
+    RegimenesFiscalesContext,
+  );
+
+  useEffect(() => {
+    GetTipoClientes();
+    GetRegimenesFiscales();
+    GetGrupos();
+    GetModelos();
+    GetRegionales();
+  }, []);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -20,6 +46,26 @@ export default function TableClientes({ rows = [] }) {
   };
   const handleClose = () => {
     setOpenModal(false);
+  };
+
+  const [modalUpdate, OpenModalUpdate] = useState(false);
+  const [id_cliente, saveIdCliente] = useState(null);
+  const handleClickOpenEdit = (id) => {
+    OpenModalUpdate(true);
+    saveIdCliente(id);
+  };
+  const handleClickCloseEdit = () => {
+    OpenModalUpdate(false);
+    saveIdCliente(null);
+  };
+
+  const [modalAdd, setOpenModalAdd] = useState(false);
+  const handleClickOpenAdd = () => {
+    setOpenModalAdd(true);
+  };
+
+  const handleClickCloseAdd = () => {
+    setOpenModalAdd(false);
   };
 
   const columns = [
@@ -115,6 +161,16 @@ export default function TableClientes({ rows = [] }) {
           label="Ver detalles"
           onClick={() => handleClickOpen(params.id)}
         />,
+        <GridActionsCellItem
+          icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+          label="Editar"
+          onClick={() => handleClickOpenEdit(params.id)}
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+          label="Eliminar"
+          onClick={() => DeleteClientes(params.id)}
+        />,
       ],
     },
   ];
@@ -141,6 +197,7 @@ export default function TableClientes({ rows = [] }) {
         <DataGrid
           rows={rows}
           columns={columns}
+          showToolbar
           autoHeight={isMobile}
           checkboxSelection={!isMobile}
           disableRowSelectionOnClick
@@ -160,9 +217,18 @@ export default function TableClientes({ rows = [] }) {
                   p: 1,
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
                 <Typography fontWeight={600}>Total: {rows.length}</Typography>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={handleClickOpenAdd}
+                  sx={{ borderRadius: 3 }}
+                >
+                  Nuevo Cliente
+                </Button>
               </Box>
             ),
           }}
@@ -200,6 +266,29 @@ export default function TableClientes({ rows = [] }) {
         modal={openModal}
         handleClose={handleClose}
         cliente={cliente}
+      />
+
+      {id_cliente !== null && (
+        <EditClientes
+          open={modalUpdate}
+          handleClose={handleClickCloseEdit}
+          id={id_cliente}
+          tipoClientes={tipoClientes}
+          regimenesFiscales={regimenesFiscales}
+          grupos={grupos}
+          modelos={modelos}
+          regionales={regionales}
+        />
+      )}
+
+      <AddClientes
+        open={modalAdd}
+        handleClose={handleClickCloseAdd}
+        tipoClientes={tipoClientes}
+        regimenesFiscales={regimenesFiscales}
+        grupos={grupos}
+        modelos={modelos}
+        regionales={regionales}
       />
     </Paper>
   );

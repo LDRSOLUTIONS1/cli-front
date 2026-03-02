@@ -55,29 +55,20 @@ const NAVIGATION = [
       },
     ],
   },
-
   {
-    segment: "",
-    title: "Contactos",
+    segment: "Contactos",
+    title: "Lista de Contactos",
     icon: <ContactPhoneIcon />,
-
-    children: [
-      {
-        segment: "Contactos",
-        title: "Lista de Contactos",
-        icon: <ContactPhoneIcon />,
-      },
-      {
-        segment: "Puestos",
-        title: "Puestos",
-        icon: <BadgeIcon />,
-      },
-      {
-        segment: "Departamentos",
-        title: "Departamentos",
-        icon: <ApartmentIcon />,
-      },
-    ],
+  },
+  {
+    segment: "Puestos",
+    title: "Puestos",
+    icon: <BadgeIcon />,
+  },
+  {
+    segment: "Departamentos",
+    title: "Departamentos",
+    icon: <ApartmentIcon />,
   },
 ];
 export default function Header({ children }) {
@@ -94,10 +85,7 @@ export default function Header({ children }) {
 
   return (
     <AppProvider navigation={NAVIGATION} router={router} theme={theme}>
-      <DashboardLayout
-        defaultSidebarCollapsed
-        initialExpandedItems={[]} 
-      >
+      <DashboardLayout defaultSidebarCollapsed initialExpandedItems={[]}>
         {children}
       </DashboardLayout>
     </AppProvider>

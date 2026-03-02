@@ -5,28 +5,37 @@ import GruposState from "./Context/Grupos/GruposState";
 import MarcasState from "./Context/Marcas/MarcasState";
 import RegionalesState from "./Context/Regionales/RegionalesState";
 import TipoClienteState from "./Context/TipoCliente/TipoClienteState";
+import ModelosState from "./Context/Modelos/ModelosState";
+import ContactosState from "./Context/Contactos/ContactosState";
 import PuestosState from "./Context/Puestos/PuestosState";
 import DepartamentosState from "./Context/Departamentos/DepartamentosState";
+import RegimenesFiscalesState from "./Context/RegimenesFiscales/RegimenesFiscalesState";
 import AppRouter from "./Routes/AppRouter";
 
 function AdminApp() {
   return (
     <AuthState>
-      <ClientesState>
-        <GruposState>
+      <MarcasState>
+        <ClientesState>
           <TipoClienteState>
-            <MarcasState>
+            <GruposState>
               <RegionalesState>
-                <PuestosState>
-                  <DepartamentosState>
-                    <AppRouter />
-                  </DepartamentosState>
-                </PuestosState>
+                <ModelosState>
+                  <ContactosState>
+                    <PuestosState>
+                      <DepartamentosState>
+                        <RegimenesFiscalesState>
+                          <AppRouter />
+                        </RegimenesFiscalesState>
+                      </DepartamentosState>
+                    </PuestosState>
+                  </ContactosState>
+                </ModelosState>
               </RegionalesState>
-            </MarcasState>
+            </GruposState>
           </TipoClienteState>
-        </GruposState>
-      </ClientesState>
+        </ClientesState>
+      </MarcasState>
     </AuthState>
   );
 }
