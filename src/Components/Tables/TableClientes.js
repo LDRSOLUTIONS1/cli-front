@@ -1,4 +1,4 @@
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
@@ -10,33 +10,13 @@ import { Button } from "@mui/material";
 import ClientesContext from "../../Context/Clientes/ClientesContext";
 import ModalDetalleCliente from "../Modals/ModalDetalleCliente";
 import { EstadoChip } from "../../utils/EstadoChip";
-import EditClientes from "../../Moduls/Clientes/EditClientes";
-import AddClientes from "../../Moduls/Clientes/AddClientes";
-import TipoClienteContext from "../../Context/TipoCliente/TipoClienteContext";
-import RegimenesFiscalesContext from "../../Context/RegimenesFiscales/RegimenesFiscalesContext";
-import GruposContext from "../../Context/Grupos/GruposContext";
-import ModelosContext from "../../Context/Modelos/ModelosContext";
-import RegionalesContext from "../../Context/Regionales/RegionalesContext";
+import { useNavigate } from "react-router-dom";
 
 export default function TableClientes({ rows = [] }) {
   const { cliente, GetCliente, DeleteClientes } = useContext(ClientesContext);
-  const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
-  const { grupos, GetGrupos } = useContext(GruposContext);
-  const { modelos, GetModelos } = useContext(ModelosContext);
-  const { regionales, GetRegionales } = useContext(RegionalesContext);
-  const { regimenesFiscales, GetRegimenesFiscales } = useContext(
-    RegimenesFiscalesContext,
-  );
-
-  useEffect(() => {
-    GetTipoClientes();
-    GetRegimenesFiscales();
-    GetGrupos();
-    GetModelos();
-    GetRegionales();
-  }, []);
 
   const theme = useTheme();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [openModal, setOpenModal] = useState(false);
@@ -48,31 +28,19 @@ export default function TableClientes({ rows = [] }) {
     setOpenModal(false);
   };
 
-  const [modalUpdate, OpenModalUpdate] = useState(false);
-  const [id_cliente, saveIdCliente] = useState(null);
-  const handleClickOpenEdit = (id) => {
-    OpenModalUpdate(true);
-    saveIdCliente(id);
-  };
-  const handleClickCloseEdit = () => {
-    OpenModalUpdate(false);
-    saveIdCliente(null);
-  };
-
-  const [modalAdd, setOpenModalAdd] = useState(false);
-  const handleClickOpenAdd = () => {
-    setOpenModalAdd(true);
-  };
-
-  const handleClickCloseAdd = () => {
-    setOpenModalAdd(false);
-  };
-
   const columns = [
     {
       field: "id",
       headerName: "ID",
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "tipo_cliente",
+      headerName: "TIPO DE CLIENTE",
+      flex: 1,
       align: "center",
       headerAlign: "center",
       minWidth: 100,
@@ -164,7 +132,7 @@ export default function TableClientes({ rows = [] }) {
         <GridActionsCellItem
           icon={<EditIcon sx={{ color: "#ed6c02" }} />}
           label="Editar"
-          onClick={() => handleClickOpenEdit(params.id)}
+          onClick={() => navigate(`/Edicion-clientes/${params.id}`)}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
@@ -204,7 +172,7 @@ export default function TableClientes({ rows = [] }) {
           pageSizeOptions={[5, 10, 20]}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 6, page: 0 },
+              paginationModel: { pageSize: 5, page: 0 },
             },
             sorting: {
               sortModel: [{ field: "id", sort: "desc" }],
@@ -224,7 +192,7 @@ export default function TableClientes({ rows = [] }) {
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
-                  onClick={handleClickOpenAdd}
+                  onClick={() => navigate("/Alta-clientes")}
                   sx={{ borderRadius: 3 }}
                 >
                   Nuevo Cliente
@@ -248,7 +216,7 @@ export default function TableClientes({ rows = [] }) {
             },
 
             "& .MuiDataGrid-cell": {
-              borderBottom: "2px solid #f0f0f0",
+              borderBottom: "2px solid #1976D2",
             },
 
             "& .MuiDataGrid-columnSeparator": {
@@ -266,29 +234,6 @@ export default function TableClientes({ rows = [] }) {
         modal={openModal}
         handleClose={handleClose}
         cliente={cliente}
-      />
-
-      {id_cliente !== null && (
-        <EditClientes
-          open={modalUpdate}
-          handleClose={handleClickCloseEdit}
-          id={id_cliente}
-          tipoClientes={tipoClientes}
-          regimenesFiscales={regimenesFiscales}
-          grupos={grupos}
-          modelos={modelos}
-          regionales={regionales}
-        />
-      )}
-
-      <AddClientes
-        open={modalAdd}
-        handleClose={handleClickCloseAdd}
-        tipoClientes={tipoClientes}
-        regimenesFiscales={regimenesFiscales}
-        grupos={grupos}
-        modelos={modelos}
-        regionales={regionales}
       />
     </Paper>
   );

@@ -158,7 +158,7 @@ const ModalDetalleTipoCliente = ({ modal, handleClose, tipoCliente }) => {
           pageSizeOptions={[5, 10]}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 6, page: 0 },
+              paginationModel: { pageSize: 5, page: 0 },
             },
           }}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
@@ -14,6 +14,10 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { createTheme } from "@mui/material/styles";
+import LogoutIcon from "@mui/icons-material/Logout";
+
+import { Box, Divider, Button } from "@mui/material";
+import AuthContext from "../../Context/Auth/AuthContext";
 
 const theme = createTheme({
   cssVariables: {
@@ -72,6 +76,7 @@ const NAVIGATION = [
   },
 ];
 export default function Header({ children }) {
+  const { cerrarSesion } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -85,7 +90,18 @@ export default function Header({ children }) {
 
   return (
     <AppProvider navigation={NAVIGATION} router={router} theme={theme}>
-      <DashboardLayout defaultSidebarCollapsed initialExpandedItems={[]}>
+      <DashboardLayout
+        defaultSidebarCollapsed
+        initialExpandedItems={[]}
+        slots={{
+          sidebarFooter: () => (
+            <Box sx={{ p: 2 }}>
+              <Divider sx={{ mb: 2 }} />
+              <LogoutIcon onClick={cerrarSesion} />
+            </Box>
+          ),
+        }}
+      >
         {children}
       </DashboardLayout>
     </AppProvider>

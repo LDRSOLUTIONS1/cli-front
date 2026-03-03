@@ -193,7 +193,7 @@ export default function TableGrupos({ rows = [] }) {
               },
 
               "& .MuiDataGrid-cell": {
-                borderBottom: "2px solid #f0f0f0",
+                borderBottom: "2px solid #1976D2",
               },
 
               "& .MuiDataGrid-columnSeparator": {

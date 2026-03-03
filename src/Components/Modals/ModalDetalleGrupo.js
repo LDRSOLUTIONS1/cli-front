@@ -158,7 +158,7 @@ const ModalDetalleGrupo = ({ modal, handleClose, grupo }) => {
           columns={columnsClientes}
           getRowId={(row) => row.id}
           autoHeight
-          disableRowSelectionOnClicktd
+          disableRowSelectionOnClick
           pageSizeOptions={[5, 10]}
           initialState={{
             pagination: {

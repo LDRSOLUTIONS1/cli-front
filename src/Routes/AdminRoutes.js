@@ -4,6 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import NoResultados from "../Components/Layout/NoResultados";
 import Inicio from "../Moduls/Inicio/Inicio";
 import Clientes from "../Moduls/Clientes/Clientes";
+import AddClientes from "../Moduls/Clientes/AddClientes";
+import EditClientes from "../Moduls/Clientes/EditClientes";
 import TipoCliente from "../Moduls/TipoCliente/TipoCliente";
 import Grupos from "../Moduls/Grupos/Grupos";
 import Marcas from "../Moduls/Marcas/Marcas";
@@ -12,6 +14,7 @@ import Modelos from "../Moduls/Modelos/Modelos";
 import Contactos from "../Moduls/Contactos/Contactos";
 import Puestos from "../Moduls/Puestos/Puestos";
 import Departamentos from "../Moduls/Departamentos/Departamentos";
+import TipoClienteTable from "../Components/Tables/TipoClienteTable";
 
 const AdminRoutes = () => {
   return (
@@ -19,7 +22,10 @@ const AdminRoutes = () => {
       <Route path="/Inicio" element={<Inicio />} />
       <Route path="/Marcas" element={<Marcas />} />
       <Route path="/Clientes" element={<Clientes />} />
+      <Route path="/Alta-clientes" element={<AddClientes />} />
+      <Route path="/Edicion-clientes/:id" element={<EditClientes />} />
       <Route path="/Tipo-clientes" element={<TipoCliente />} />
+      <Route path="/Tipo-clientes/:id" element={<TipoClienteTable />} />
       <Route path="/Grupos" element={<Grupos />} />
       <Route path="/Regionales" element={<Regionales />} />
       <Route path="/Modelos" element={<Modelos />} />

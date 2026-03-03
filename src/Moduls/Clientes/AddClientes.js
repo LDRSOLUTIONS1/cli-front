@@ -1,27 +1,38 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Grid, MenuItem } from "@mui/material";
+import { Grid, Typography, Box, Button, Divider } from "@mui/material";
 import ClientesContext from "../../Context/Clientes/ClientesContext";
 import MultiSelect from "../../Components/Forms/MultiSelect";
 import SelectField from "../../Components/Forms/Select";
+import Layout from "../../Components/Layout/Layout";
+import TipoClienteContext from "../../Context/TipoCliente/TipoClienteContext";
+import RegimenesFiscalesContext from "../../Context/RegimenesFiscales/RegimenesFiscalesContext";
+import GruposContext from "../../Context/Grupos/GruposContext";
+import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
+import ModelosContext from "../../Context/Modelos/ModelosContext";
+import RegionalesContext from "../../Context/Regionales/RegionalesContext";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
-export default function AddClientes({
-  open,
-  handleClose,
-  tipoClientes,
-  regimenesFiscales,
-  grupos,
-  modelos,
-  regionales,
-}) {
+export default function AddClientes() {
   const { CreateClientes } = useContext(ClientesContext);
+  const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
+  const { grupos, GetGrupos } = useContext(GruposContext);
+  const { modelos, GetModelos } = useContext(ModelosContext);
+  const { regionales, GetRegionales } = useContext(RegionalesContext);
+  const { regimenesFiscales, GetRegimenesFiscales } = useContext(
+    RegimenesFiscalesContext,
+  );
+
+  useEffect(() => {
+    GetTipoClientes();
+    GetRegimenesFiscales();
+    GetGrupos();
+    GetModelos();
+    GetRegionales();
+  }, []);
 
   const {
     register,
@@ -33,7 +44,6 @@ export default function AddClientes({
 
   const onSubmit = (data, e) => {
     CreateClientes(data);
-    handleClose();
   };
 
   const tipoPersonaSeleccionada = watch("tipo_persona");
@@ -55,20 +65,19 @@ export default function AddClientes({
   ];
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>Nuevo Cliente</DialogTitle>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        autoComplete="off"
-        onKeyDown={(e) => {
-          if (e.code === "Enter" || e.code === "NumpadEnter") {
-            e.preventDefault();
-          }
-        }}
-      >
-        <DialogContent>
+    <Layout>
+      <Grid container spacing={2} sx={{ padding: 4 }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" fontWeight="bold">
+            Crear cliente
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Completa la información para registrar un nuevo cliente
+          </Typography>
+        </Box>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <SelectField
                 name="tipo_cliente_id"
                 label="Tipo de cliente"
@@ -78,7 +87,7 @@ export default function AddClientes({
                 options={tipoClientes}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <SelectField
                 name="tipo_persona"
                 label="Tipo de persona"
@@ -88,7 +97,7 @@ export default function AddClientes({
                 options={tiposPersona}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <SelectField
                 name="regimen_fiscal_id"
                 label="Régimen fiscal"
@@ -104,7 +113,7 @@ export default function AddClientes({
 
             {tipoPersonaSeleccionada === 1 && (
               <>
-                <Grid size={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <TextField
                     fullWidth
                     label="Nombre"
@@ -120,7 +129,7 @@ export default function AddClientes({
                     helperText={errors.nombre_fisica?.message}
                   />
                 </Grid>
-                <Grid size={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <TextField
                     fullWidth
                     label="Apellido Paterno"
@@ -136,7 +145,7 @@ export default function AddClientes({
                     helperText={errors.apellido_paterno?.message}
                   />
                 </Grid>
-                <Grid size={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <TextField
                     fullWidth
                     label="Apellido Materno"
@@ -152,7 +161,7 @@ export default function AddClientes({
                     helperText={errors.apellido_materno?.message}
                   />
                 </Grid>
-                <Grid size={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <TextField
                     fullWidth
                     label="Fecha de nacimiento"
@@ -167,7 +176,7 @@ export default function AddClientes({
                     helperText={errors.fecha_nacimiento?.message}
                   />
                 </Grid>
-                <Grid size={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <TextField
                     fullWidth
                     label="CURP"
@@ -190,7 +199,7 @@ export default function AddClientes({
             )}
             {tipoPersonaSeleccionada === 2 && (
               <>
-                <Grid size={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <TextField
                     fullWidth
                     label="Representante Legal"
@@ -206,7 +215,7 @@ export default function AddClientes({
                     helperText={errors.representante_legal?.message}
                   />
                 </Grid>
-                <Grid size={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <TextField
                     fullWidth
                     label="Domicilio Fiscal"
@@ -224,7 +233,7 @@ export default function AddClientes({
                 </Grid>
               </>
             )}
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
                 label="Correo electrónico"
@@ -239,7 +248,7 @@ export default function AddClientes({
                 helperText={errors.correo?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <SelectField
                 name="grupo_id"
                 label="Grupo"
@@ -249,7 +258,7 @@ export default function AddClientes({
                 options={grupos}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
                 label="Nombre comercial"
@@ -265,7 +274,7 @@ export default function AddClientes({
                 helperText={errors.nombre_comercial?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
                 label="Razón social"
@@ -281,7 +290,7 @@ export default function AddClientes({
                 helperText={errors.razon_social?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
                 label="RFC"
@@ -300,12 +309,12 @@ export default function AddClientes({
                 helperText={errors.rfc?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
-                label="NO. REPUVE"
+                label="No. repuve"
                 {...register("repve", {
-                  required: "El NO. REPUVE es obligatorio",
+                  required: "El no. repuve es obligatorio",
                   minLength: {
                     value: 1,
                     message: "Mínimo 1 caracteres",
@@ -319,10 +328,10 @@ export default function AddClientes({
                 helperText={errors.repve?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
-                label="PLAZA"
+                label="Plaza"
                 {...register("plaza", {
                   required: "La plaza es obligatoria",
                   minLength: {
@@ -338,10 +347,10 @@ export default function AddClientes({
                 helperText={errors.plaza?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
-                label="CLASIFICACIÓN"
+                label="Clasificación"
                 {...register("clasificacion", {
                   required: "La clasificación es obligatoria",
                   minLength: {
@@ -357,7 +366,7 @@ export default function AddClientes({
                 helperText={errors.clasificacion?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <SelectField
                 name="estatus"
                 label="Estatus"
@@ -367,7 +376,7 @@ export default function AddClientes({
                 options={tiposEstatus}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <SelectField
                 name="tipo_negocio"
                 label="Tipo de negocio"
@@ -377,7 +386,7 @@ export default function AddClientes({
                 options={tiposNegocio}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
                 label="Teléfono"
@@ -392,7 +401,7 @@ export default function AddClientes({
                 helperText={errors.telefono?.message}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
                 label="Teléfono alternativo"
@@ -406,8 +415,7 @@ export default function AddClientes({
                 helperText={errors.telefono_alt?.message}
               />
             </Grid>
-
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <MultiSelect
                 name="modelo"
                 control={control}
@@ -417,7 +425,7 @@ export default function AddClientes({
                 errors={errors}
               />
             </Grid>
-            <Grid size={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <MultiSelect
                 name="regional"
                 control={control}
@@ -428,30 +436,28 @@ export default function AddClientes({
               />
             </Grid>
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleClose}
-            sx={{
-              backgroundColor: "red",
-              color: "white",
-              "&:hover": { backgroundColor: "darkred" },
-            }}
+
+          <Box
+            sx={{ mt: 4, display: "flex", justifyContent: "flex-end", gap: 2 }}
           >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            sx={{
-              backgroundColor: "#1565c0",
-              color: "white",
-              "&:hover": { backgroundColor: "#0d47a1" },
-            }}
-          >
-            Guardar
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              startIcon={<FileDownloadDoneIcon />}
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: 2,
+                fontWeight: 600,
+                textTransform: "none",
+              }}
+            >
+              Guardar cliente
+            </Button>
+          </Box>
+        </form>
+      </Grid>
+    </Layout>
   );
 }

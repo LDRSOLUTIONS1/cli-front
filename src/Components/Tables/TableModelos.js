@@ -142,7 +142,7 @@ export default function TableModelos({ rows = [] }) {
             pageSizeOptions={[5, 10, 20]}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 6, page: 0 },
+                paginationModel: { pageSize: 5, page: 0 },
               },
               sorting: {
                 sortModel: [{ field: "id", sort: "desc" }],
@@ -186,7 +186,7 @@ export default function TableModelos({ rows = [] }) {
               },
 
               "& .MuiDataGrid-cell": {
-                borderBottom: "2px solid #f0f0f0",
+                borderBottom: "2px solid #1976D2",
               },
 
               "& .MuiDataGrid-columnSeparator": {

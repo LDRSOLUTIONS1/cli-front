@@ -15,10 +15,16 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import PublicIcon from "@mui/icons-material/Public";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import TipoClienteContext from "../../Context/TipoCliente/TipoClienteContext";
 
 const Inicio = () => {
+  const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
   const { usuario } = useContext(AuthContext);
   const [saludo, setSaludo] = useState("");
+
+  useEffect(() => {
+    GetTipoClientes();
+  }, []);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -27,33 +33,19 @@ const Inicio = () => {
     );
   }, []);
 
-  const cardsData = [
-    {
-      title: "Clientes Internos",
-      icon: <GroupsIcon />,
-      gradient: "linear-gradient(135deg, #4F46E5, #6366F1)",
-      link: "/tipo-clientes",
-    },
-    {
-      title: "Clientes Externos",
-      icon: <PublicIcon />,
-      gradient: "linear-gradient(135deg, #F43F5E, #FB7185)",
-      link: "/tipo-clientes",
-    },
-    {
-      title: "Clientes Gubernamentales",
-      icon: <AccountBalanceIcon />,
-      gradient: "linear-gradient(135deg, #0EA5E9, #38BDF8)",
-      link: "/tipo-clientes",
-    },
-    {
-      title: "Clientes Distribuidores",
-      icon: <LocalShippingIcon />,
-      gradient: "linear-gradient(135deg, #9333EA, #A855F7)",
-      link: "/tipo-clientes",
-    },
-  ];
+  const iconMap = {
+    "Clientes Internos": <GroupsIcon />,
+    "Clientes Externos": <PublicIcon />,
+    Gubernamental: <AccountBalanceIcon />,
+    Distribuidores: <LocalShippingIcon />,
+  };
 
+  const gradientMap = {
+    "Clientes Internos": "linear-gradient(135deg, #4F46E5, #6366F1)",
+    "Clientes Externos": "linear-gradient(135deg, #F43F5E, #FB7185)",
+    "Clientes Gubernamentales": "linear-gradient(135deg, #0EA5E9, #38BDF8)",
+    Distribuidores: "linear-gradient(135deg, #9333EA, #A855F7)",
+  };
   const nombreCompleto = [usuario?.user?.nombres, usuario?.user?.apellidos]
     .filter(Boolean)
     .join(" ");
@@ -90,14 +82,17 @@ const Inicio = () => {
         <Container maxWidth="lg">
           <Box textAlign="center" mb={6}>
             <Typography variant="h4" fontWeight="700">
-              {saludo}, {nombreCompleto}
+              Hola, {saludo}, {nombreCompleto}.
+              <br />
+              Bienvenido a la Plataforma de Gestión de Clientes.
             </Typography>
 
             <Typography
               variant="subtitle1"
               sx={{ color: "text.secondary", mt: 1 }}
             >
-              Bienvenido a la Plataforma de Gestión de Clientes
+              Selecciona el tipo de cliente para comenzar a gestionar la
+              información.
             </Typography>
           </Box>
 
@@ -111,16 +106,19 @@ const Inicio = () => {
             initial="hidden"
             animate="visible"
           >
-            {cardsData.map((card, index) => (
+            {tipoClientes?.map((cliente) => (
               <Grid
                 item
-                key={index}
+                key={cliente.id}
                 display="flex"
                 justifyContent="center"
                 component={motion.div}
                 variants={cardVariants}
               >
-                <Link to={card.link} style={{ textDecoration: "none" }}>
+                <Link
+                  to={`/tipo-clientes/${cliente.id}`}
+                  style={{ textDecoration: "none" }}
+                >
                   <Card
                     whileHover={{ y: -8 }}
                     transition={{ duration: 0.3 }}
@@ -145,7 +143,9 @@ const Inicio = () => {
                       sx={{
                         height: 6,
                         width: "100%",
-                        background: card.gradient,
+                        background:
+                          gradientMap[cliente.nombre] ||
+                          "linear-gradient(135deg, #6B7280, #9CA3AF)",
                       }}
                     />
 
@@ -166,7 +166,9 @@ const Inicio = () => {
                           width: 70,
                           height: 70,
                           borderRadius: "18px",
-                          background: card.gradient,
+                          background:
+                            gradientMap[cliente.nombre] ||
+                            "linear-gradient(135deg, #6B7280, #9CA3AF)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -174,7 +176,7 @@ const Inicio = () => {
                           boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
                         }}
                       >
-                        {card.icon}
+                        {iconMap[cliente.nombre] || <GroupsIcon />}
                       </Box>
 
                       <Typography
@@ -187,14 +189,14 @@ const Inicio = () => {
                           justifyContent: "center",
                         }}
                       >
-                        {card.title}
+                        {cliente.nombre}
                       </Typography>
 
                       <Typography
                         variant="body2"
                         sx={{ color: "text.secondary", maxWidth: 220 }}
                       >
-                        {card.subtitle}
+                        {cliente.descripcion}
                       </Typography>
                     </CardContent>
                   </Card>
