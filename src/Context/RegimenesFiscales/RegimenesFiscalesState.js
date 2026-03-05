@@ -33,8 +33,8 @@ const RegimenesFiscalesState = ({ children }) => {
     }
   };
 
-  const GetRegimenesFiscales = () => {
-    MethodGet("/regimenes-fiscales")
+  const GetRegimenesFiscales = (tipoPersona = null) => {
+    MethodGet(`/regimenes-fiscales/${tipoPersona}`)
       .then((res) => {
         dispatch({
           type: GET_ALL_REGIMENES_FISCALES,

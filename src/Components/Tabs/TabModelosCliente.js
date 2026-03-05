@@ -38,7 +38,7 @@ const TabModelosCliente = ({ modelos = [] }) => {
       <DataGrid
         rows={modelos}
         columns={columns}
-        getRowId={(row) => row.idlineaproducto}
+        getRowId={(row) => row.id}
         autoHeight
         disableRowSelectionOnClick
         pageSizeOptions={[5, 10]}

@@ -15,8 +15,9 @@ import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { createTheme } from "@mui/material/styles";
 import LogoutIcon from "@mui/icons-material/Logout";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 
-import { Box, Divider, Button } from "@mui/material";
+import { Tooltip, Divider, Grid } from "@mui/material";
 import AuthContext from "../../Context/Auth/AuthContext";
 
 const theme = createTheme({
@@ -95,10 +96,21 @@ export default function Header({ children }) {
         initialExpandedItems={[]}
         slots={{
           sidebarFooter: () => (
-            <Box sx={{ p: 2 }}>
-              <Divider sx={{ mb: 2 }} />
-              <LogoutIcon onClick={cerrarSesion} />
-            </Box>
+            <Grid container direction="column" alignItems="center" spacing={2}>
+              <Divider />
+              <Tooltip title="Volver a la intranet">
+                <KeyboardReturnIcon
+                  onClick={() =>
+                    window.location.replace(
+                      "https://ldrhsys.ldrhumanresources.com/Cliente/interfaces/Inicio.php",
+                    )
+                  }
+                />
+              </Tooltip>
+              <Tooltip title="Cerrar sesión">
+                <LogoutIcon onClick={cerrarSesion} />
+              </Tooltip>
+            </Grid>
           ),
         }}
       >
