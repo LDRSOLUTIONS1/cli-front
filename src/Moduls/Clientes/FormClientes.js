@@ -1,6 +1,6 @@
 import * as React from "react";
 import TextField from "@mui/material/TextField";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Grid, Typography, Box, Button, Divider } from "@mui/material";
 import ClientesContext from "../../Context/Clientes/ClientesContext";
@@ -18,9 +18,10 @@ import SelectPaises from "../../Components/Forms/SelectOptions/SelectPaises";
 import SelectEstados from "../../Components/Forms/SelectOptions/SelectEstados";
 import SelectMunicipios from "../../Components/Forms/SelectOptions/SelectMunicipios";
 import MarcasContext from "../../Context/Marcas/MarcasContext";
+import { useParams } from "react-router-dom";
+import MethodGet from "../../Config/Service";
 
-export default function AddClientes() {
-  const { clientes, GetClientes, CreateClientes } = useContext(ClientesContext);
+export default function FormClientes() {
   const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
   const { grupos, GetGrupos } = useContext(GruposContext);
   const { modelos, GetModelos } = useContext(ModelosContext);
@@ -29,6 +30,24 @@ export default function AddClientes() {
   const { regimenesFiscales, GetRegimenesFiscales } = useContext(
     RegimenesFiscalesContext,
   );
+  const { clientes, GetClientes, CreateClientes, UpdateClientes } =
+    useContext(ClientesContext);
+
+  const { id } = useParams();
+  const [cliente, saveCliente] = useState(null);
+  console.log("El cliente", cliente);
+
+  useEffect(() => {
+    if (!id) return;
+    let url = `/clientes/${id}`;
+    MethodGet(url)
+      .then((res) => {
+        saveCliente(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [id]);
 
   const {
     register,
@@ -50,21 +69,83 @@ export default function AddClientes() {
   const fiscalPaisSeleccionado = watch("fiscal_pais_id");
   const fiscalEstadoSeleccionado = watch("fiscal_estado_id");
 
+  const direccion = cliente?.direcciones?.[0];
+  const direccion_fiscal = cliente?.direcciones_fiscales?.[0];
+
   useEffect(() => {
+    if (cliente) {
+      reset({
+        ...cliente,
+        tipo_cliente_id: cliente.tipo_cliente_id,
+        tipo_persona: cliente.tipo_persona,
+        regimen_fiscal_id: cliente.regimen_fiscal_id,
+        grupo_id: cliente.grupo_id,
+        estatus: cliente.estatus,
+        tipo_negocio: cliente.tipo_negocio,
+
+        // direccion principal
+        calle: direccion?.calle,
+        numero_ext: direccion?.numero_ext,
+        numero_int: direccion?.numero_int,
+        colonia: direccion?.colonia,
+        codigo_postal: direccion?.codigo_postal,
+        pais_id: direccion?.pais_id,
+        estado_id: direccion?.estado_id,
+        municipio_id: direccion?.municipio_id,
+
+        // direccion fiscal
+        fiscal_calle: direccion_fiscal?.calle,
+        fiscal_numero_ext: direccion_fiscal?.numero_ext,
+        fiscal_numero_int: direccion_fiscal?.numero_int,
+        fiscal_colonia: direccion_fiscal?.colonia,
+        fiscal_codigo_postal: direccion_fiscal?.codigo_postal,
+        fiscal_pais_id: direccion_fiscal?.pais_id,
+        fiscal_estado_id: direccion_fiscal?.estado_id,
+        fiscal_municipio_id: direccion_fiscal?.municipio_id,
+      });
+    }
+  }, [cliente]);
+
+  const firstLoadPais = React.useRef(true);
+  const firstLoadEstado = React.useRef(true);
+  const firstLoadFiscalPais = React.useRef(true);
+  const firstLoadFiscalEstado = React.useRef(true);
+
+  useEffect(() => {
+    if (firstLoadPais.current) {
+      firstLoadPais.current = false;
+      return;
+    }
+
     setValue("estado_id", "");
     setValue("municipio_id", "");
   }, [paisSeleccionado]);
 
   useEffect(() => {
+    if (firstLoadEstado.current) {
+      firstLoadEstado.current = false;
+      return;
+    }
+
     setValue("municipio_id", "");
   }, [estadoSeleccionado]);
 
   useEffect(() => {
+    if (firstLoadFiscalPais.current) {
+      firstLoadFiscalPais.current = false;
+      return;
+    }
+
     setValue("fiscal_estado_id", "");
     setValue("fiscal_municipio_id", "");
   }, [fiscalPaisSeleccionado]);
 
   useEffect(() => {
+    if (firstLoadFiscalEstado.current) {
+      firstLoadFiscalEstado.current = false;
+      return;
+    }
+
     setValue("fiscal_municipio_id", "");
   }, [fiscalEstadoSeleccionado]);
 
@@ -169,7 +250,12 @@ export default function AddClientes() {
           },
     };
 
-    CreateClientes(payload);
+    if (id) {
+      UpdateClientes(id, payload);
+    } else {
+      CreateClientes(payload);
+    }
+    //CreateClientes(payload);
     // reset();
   };
 
@@ -383,6 +469,7 @@ export default function AddClientes() {
                 type="email"
                 fullWidth
                 label="Correo electrónico"
+                InputLabelProps={{ shrink: !!watch("correo") }}
                 {...register("correo", {
                   required: "El correo electrónico es obligatorio",
                   pattern: {
@@ -408,6 +495,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Nombre comercial"
+                InputLabelProps={{ shrink: !!watch("nombre_comercial") }}
                 {...register("nombre_comercial", {
                   required: "El nombre comercial es obligatorio",
                   minLength: { value: 1, message: "Mínimo 1 caracteres" },
@@ -424,6 +512,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Razón social"
+                InputLabelProps={{ shrink: !!watch("razon_social") }}
                 {...register("razon_social", {
                   required: "La razón social es obligatoria",
                   minLength: { value: 1, message: "Mínimo 1 caracteres" },
@@ -440,6 +529,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="RFC"
+                InputLabelProps={{ shrink: !!watch("rfc") }}
                 {...register("rfc", {
                   required: "El RFC es obligatorio",
                   minLength: {
@@ -466,6 +556,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="No. repuve"
+                InputLabelProps={{ shrink: !!watch("repve") }}
                 {...register("repve", {
                   required: "El no. repuve es obligatorio",
                   minLength: {
@@ -485,6 +576,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Plaza"
+                InputLabelProps={{ shrink: !!watch("plaza") }}
                 {...register("plaza", {
                   required: "La plaza es obligatoria",
                   minLength: {
@@ -504,6 +596,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Clasificación"
+                InputLabelProps={{ shrink: !!watch("clasificacion") }}
                 {...register("clasificacion", {
                   required: "La clasificación es obligatoria",
                   minLength: {
@@ -557,6 +650,7 @@ export default function AddClientes() {
                 type="number"
                 fullWidth
                 label="Teléfono"
+                InputLabelProps={{ shrink: !!watch("telefono") }}
                 {...register("telefono", {
                   required: "El teléfono es obligatorio",
                   pattern: {
@@ -573,6 +667,7 @@ export default function AddClientes() {
                 type="number"
                 fullWidth
                 label="Teléfono alternativo"
+                InputLabelProps={{ shrink: !!watch("telefono_alt") }}
                 {...register("telefono_alt", {
                   pattern: {
                     value: /^\d{10}$/,
@@ -625,6 +720,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Calle"
+                InputLabelProps={{ shrink: !!watch("calle") }}
                 {...register("calle", {
                   required: "La calle es obligatoria",
                   minLength: {
@@ -644,6 +740,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Número exterior"
+                InputLabelProps={{ shrink: !!watch("numero_ext") }}
                 {...register("numero_ext", {
                   required: "El número exterior es obligatorio",
                   minLength: {
@@ -663,6 +760,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Número interior"
+                InputLabelProps={{ shrink: !!watch("numero_int") }}
                 {...register("numero_int", {
                   minLength: {
                     value: 1,
@@ -681,6 +779,7 @@ export default function AddClientes() {
               <TextField
                 fullWidth
                 label="Colonia"
+                InputLabelProps={{ shrink: !!watch("colonia") }}
                 {...register("colonia", {
                   required: "La colonia es obligatoria",
                   minLength: {
@@ -701,6 +800,7 @@ export default function AddClientes() {
                 type="number"
                 fullWidth
                 label="Código postal"
+                InputLabelProps={{ shrink: !!watch("codigo_postal") }}
                 {...register("codigo_postal", {
                   required: "El código postal es obligatorio",
                   pattern: {
@@ -909,7 +1009,7 @@ export default function AddClientes() {
                 textTransform: "none",
               }}
             >
-              Guardar cliente
+              {id ? "Actualizar cliente" : "Guardar cliente"}
             </Button>
           </Box>
         </form>

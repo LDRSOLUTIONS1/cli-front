@@ -4,8 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import NoResultados from "../Components/Layout/NoResultados";
 import Inicio from "../Moduls/Inicio/Inicio";
 import Clientes from "../Moduls/Clientes/Clientes";
-import AddClientes from "../Moduls/Clientes/AddClientes";
-import EditClientes from "../Moduls/Clientes/EditClientes";
+import FormClientes from "../Moduls/Clientes/FormClientes";
 import TipoCliente from "../Moduls/TipoCliente/TipoCliente";
 import Grupos from "../Moduls/Grupos/Grupos";
 import Marcas from "../Moduls/Marcas/Marcas";
@@ -22,8 +21,8 @@ const AdminRoutes = () => {
       <Route path="/Inicio" element={<Inicio />} />
       <Route path="/Marcas" element={<Marcas />} />
       <Route path="/Clientes" element={<Clientes />} />
-      <Route path="/Alta-clientes" element={<AddClientes />} />
-      <Route path="/Edicion-clientes/:id" element={<EditClientes />} />
+      <Route path="/Alta-clientes" element={<FormClientes />} />
+      <Route path="/Edicion-clientes/:id" element={<FormClientes />} />
       <Route path="/Tipo-clientes" element={<TipoCliente />} />
       <Route path="/Tipo-clientes/:id" element={<TipoClienteTable />} />
       <Route path="/Grupos" element={<Grupos />} />

@@ -26,28 +26,27 @@ const ClientesState = ({ children }) => {
   const [state, dispatch] = useReducer(ClientesReducer, initialState);
 
   const handleError = (error) => {
-    const data = error.response?.data;
+    if (error.response?.status === 422) {
+      const errors = error.response.data.errors;
 
-    if (data?.errors) {
-      const mensajes = Object.values(data.errors).flat().join("\n");
+      const mensajes = Object.values(errors)
+        .map((err) => err[0])
+        .join("\n");
+
       Swal.fire({
-        title: "Error de validación",
+        title: "Errores de validación",
         icon: "warning",
         text: mensajes,
       });
-    } else if (data?.mensaje) {
-      Swal.fire({
-        title: data.error || "Error",
-        icon: "error",
-        text: data.mensaje,
-      });
-    } else {
-      Swal.fire({
-        title: "Error",
-        icon: "error",
-        text: "Ocurrió un error inesperado",
-      });
+
+      return;
     }
+
+    Swal.fire({
+      title: "Error",
+      icon: "error",
+      text: "Ocurrió un error en el servidor",
+    });
   };
 
   const GetClientes = () => {
