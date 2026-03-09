@@ -5,7 +5,7 @@ import MethodGet from "../../../Config/Service";
 const SelectMunicipios = ({
   name,
   label,
-  register,
+  control,
   rules,
   errors,
   estadoId,
@@ -31,7 +31,7 @@ const SelectMunicipios = ({
     <SelectField
       name={name}
       label={label}
-      register={register}
+      control={control}
       rules={rules}
       errors={errors}
       options={municipios}

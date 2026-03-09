@@ -1,36 +1,46 @@
 import React from "react";
+import { Controller } from "react-hook-form";
 import { TextField, MenuItem } from "@mui/material";
 
 export default function SelectField({
   name,
   label,
-  register,
-  rules,
+  control,
+  rules = {},
   errors,
-  options,
-  getOptionLabel,
+  options = [],
+  disabled,
   optionValue = "id",
+  getOptionLabel,
   defaultOption = "Selecciona una opción",
 }) {
   return (
-    <TextField
-      select
-      fullWidth
-      label={label}
+    <Controller
+      name={name}
+      control={control}
       defaultValue=""
-      {...register(name, rules)}
-      error={!!errors?.[name]}
-      helperText={errors?.[name]?.message}
-    >
-      <MenuItem value="">
-        <em>{defaultOption}</em>
-      </MenuItem>
+      rules={rules}
+      render={({ field }) => (
+        <TextField
+          {...field}
+          select
+          fullWidth
+          disabled={disabled}
+          label={label}
+          error={!!errors?.[name]}
+          helperText={errors?.[name]?.message}
+        >
+          <MenuItem value="">
+            <em>{defaultOption}</em>
+          </MenuItem>
 
-      {options.map((item) => (
-        <MenuItem key={item[optionValue]} value={item[optionValue]}>
-          {getOptionLabel ? getOptionLabel(item) : item.nombre}
-        </MenuItem>
-      ))}
-    </TextField>
+          {options.map((item) => (
+            <MenuItem key={item[optionValue]} value={item[optionValue]}>
+              {getOptionLabel ? getOptionLabel(item) : item.nombre}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
+    />
   );
 }

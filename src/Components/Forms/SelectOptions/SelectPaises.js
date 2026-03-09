@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SelectField from "../Select";
 import MethodGet from "../../../Config/Service";
 
-const SelectPaises = ({ name, label, register, rules, errors }) => {
+const SelectPaises = ({ name, label, control, rules, errors }) => {
   const [paises, setPaises] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const SelectPaises = ({ name, label, register, rules, errors }) => {
     <SelectField
       name={name}
       label={label}
-      register={register}
+      control={control}
       rules={rules}
       errors={errors}
       options={paises}

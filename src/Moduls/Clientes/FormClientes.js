@@ -76,6 +76,7 @@ export default function FormClientes() {
     if (cliente) {
       reset({
         ...cliente,
+        marca_id: cliente.marcas?.map((m) => m.id) || [],
         tipo_cliente_id: cliente.tipo_cliente_id,
         tipo_persona: cliente.tipo_persona,
         regimen_fiscal_id: cliente.regimen_fiscal_id,
@@ -83,7 +84,10 @@ export default function FormClientes() {
         estatus: cliente.estatus,
         tipo_negocio: cliente.tipo_negocio,
 
-        // direccion principal
+        modelo: cliente.modelos?.map((m) => m.id) || [],
+        regional: cliente.regionales?.map((r) => r.id) || [],
+
+        tipo: direccion?.tipo,
         calle: direccion?.calle,
         numero_ext: direccion?.numero_ext,
         numero_int: direccion?.numero_int,
@@ -93,7 +97,6 @@ export default function FormClientes() {
         estado_id: direccion?.estado_id,
         municipio_id: direccion?.municipio_id,
 
-        // direccion fiscal
         fiscal_calle: direccion_fiscal?.calle,
         fiscal_numero_ext: direccion_fiscal?.numero_ext,
         fiscal_numero_int: direccion_fiscal?.numero_int,
@@ -102,6 +105,8 @@ export default function FormClientes() {
         fiscal_pais_id: direccion_fiscal?.pais_id,
         fiscal_estado_id: direccion_fiscal?.estado_id,
         fiscal_municipio_id: direccion_fiscal?.municipio_id,
+
+        direccion_fiscal_diferente: !!direccion_fiscal,
       });
     }
   }, [cliente]);
@@ -117,6 +122,8 @@ export default function FormClientes() {
       return;
     }
 
+    if (id) return;
+
     setValue("estado_id", "");
     setValue("municipio_id", "");
   }, [paisSeleccionado]);
@@ -127,6 +134,8 @@ export default function FormClientes() {
       return;
     }
 
+    if (id) return;
+
     setValue("municipio_id", "");
   }, [estadoSeleccionado]);
 
@@ -135,6 +144,8 @@ export default function FormClientes() {
       firstLoadFiscalPais.current = false;
       return;
     }
+
+    if (id) return;
 
     setValue("fiscal_estado_id", "");
     setValue("fiscal_municipio_id", "");
@@ -145,6 +156,8 @@ export default function FormClientes() {
       firstLoadFiscalEstado.current = false;
       return;
     }
+
+    if (id) return;
 
     setValue("fiscal_municipio_id", "");
   }, [fiscalEstadoSeleccionado]);
@@ -251,12 +264,13 @@ export default function FormClientes() {
     };
 
     if (id) {
-      UpdateClientes(id, payload);
+      UpdateClientes({
+        id,
+        ...payload,
+      });
     } else {
       CreateClientes(payload);
     }
-    //CreateClientes(payload);
-    // reset();
   };
 
   const tiposPersona = [
@@ -295,7 +309,7 @@ export default function FormClientes() {
               <SelectField
                 name="marca_id"
                 label="Marca"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar una marca" }}
                 errors={errors}
                 options={marcas}
@@ -305,7 +319,7 @@ export default function FormClientes() {
               <SelectField
                 name="tipo_cliente_id"
                 label="Tipo de cliente"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un tipo de cliente" }}
                 errors={errors}
                 options={tipoClientes}
@@ -315,7 +329,7 @@ export default function FormClientes() {
               <SelectField
                 name="tipo_persona"
                 label="Tipo de persona"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un tipo de persona" }}
                 errors={errors}
                 options={tiposPersona}
@@ -325,7 +339,7 @@ export default function FormClientes() {
               <SelectField
                 name="regimen_fiscal_id"
                 label="Régimen fiscal"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un régimen fiscal" }}
                 errors={errors}
                 options={regimenesFiscales}
@@ -485,7 +499,7 @@ export default function FormClientes() {
               <SelectField
                 name="grupo_id"
                 label="Grupo"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un grupo" }}
                 errors={errors}
                 options={grupos}
@@ -541,7 +555,7 @@ export default function FormClientes() {
                     message: "El RFC debe tener como máximo 13 caracteres",
                   },
                   pattern: {
-                    value: /^[A-Z]{4}[0-9]{6}[A-Z0-9]{3}$/,
+                    value: /^([A-ZÑ&]{3,4})\d{6}([A-Z\d]{3})$/,
                     message: "Ingresa un RFC valido",
                   },
                   onChange: (e) => {
@@ -616,7 +630,7 @@ export default function FormClientes() {
               <SelectField
                 name="estatus"
                 label="Estatus"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un estatus" }}
                 errors={errors}
                 options={tiposEstatus}
@@ -626,7 +640,7 @@ export default function FormClientes() {
               <SelectField
                 name="tipo_negocio"
                 label="Tipo de negocio"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un tipo de negocio" }}
                 errors={errors}
                 options={tiposNegocio}
@@ -637,7 +651,7 @@ export default function FormClientes() {
                 <SelectField
                   name="matriz_id"
                   label="¿A qué matriz pertenece la sucursal?"
-                  register={register}
+                  control={control}
                   rules={{ required: "Debes seleccionar una matriz" }}
                   errors={errors}
                   options={clientes}
@@ -710,7 +724,7 @@ export default function FormClientes() {
               <SelectField
                 name="tipo"
                 label="Tipo de dirección"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un tipo de dirección" }}
                 errors={errors}
                 options={tiposDireccion}
@@ -762,10 +776,6 @@ export default function FormClientes() {
                 label="Número interior"
                 InputLabelProps={{ shrink: !!watch("numero_int") }}
                 {...register("numero_int", {
-                  minLength: {
-                    value: 1,
-                    message: "Mínimo 1 caracteres",
-                  },
                   maxLength: {
                     value: 20,
                     message: "Máximo 20 caracteres",
@@ -816,7 +826,7 @@ export default function FormClientes() {
               <SelectPaises
                 name="pais_id"
                 label="País"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un país" }}
                 errors={errors}
               />
@@ -825,7 +835,7 @@ export default function FormClientes() {
               <SelectEstados
                 name="estado_id"
                 label="Estado"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un estado" }}
                 errors={errors}
                 paisId={paisSeleccionado}
@@ -836,7 +846,7 @@ export default function FormClientes() {
               <SelectMunicipios
                 name="municipio_id"
                 label="Municipio"
-                register={register}
+                control={control}
                 rules={{ required: "Debes seleccionar un municipio" }}
                 errors={errors}
                 estadoId={estadoSeleccionado}
@@ -910,10 +920,6 @@ export default function FormClientes() {
                     fullWidth
                     label="Número interior"
                     {...register("fiscal_numero_int", {
-                      minLength: {
-                        value: 1,
-                        message: "Mínimo 1 caracteres",
-                      },
                       maxLength: {
                         value: 20,
                         message: "Máximo 20 caracteres",
@@ -962,7 +968,7 @@ export default function FormClientes() {
                   <SelectPaises
                     name="fiscal_pais_id"
                     label="País"
-                    register={register}
+                    control={control}
                     rules={{ required: "Debes seleccionar un país" }}
                     errors={errors}
                   />
@@ -971,7 +977,7 @@ export default function FormClientes() {
                   <SelectEstados
                     name="fiscal_estado_id"
                     label="Estado"
-                    register={register}
+                    control={control}
                     rules={{ required: "Debes seleccionar un estado" }}
                     errors={errors}
                     paisId={fiscalPaisSeleccionado}
@@ -982,7 +988,7 @@ export default function FormClientes() {
                   <SelectMunicipios
                     name="fiscal_municipio_id"
                     label="Municipio"
-                    register={register}
+                    control={control}
                     rules={{ required: "Debes seleccionar un municipio" }}
                     errors={errors}
                     estadoId={fiscalEstadoSeleccionado}

@@ -19,6 +19,7 @@ import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 
 import { Tooltip, Divider, Grid } from "@mui/material";
 import AuthContext from "../../Context/Auth/AuthContext";
+import LogoDinamico from "./LogoDinamico";
 
 const theme = createTheme({
   cssVariables: {
@@ -90,7 +91,15 @@ export default function Header({ children }) {
   );
 
   return (
-    <AppProvider navigation={NAVIGATION} router={router} theme={theme}>
+    <AppProvider
+      navigation={NAVIGATION}
+      router={router}
+      theme={theme}
+      branding={{
+        logo: <LogoDinamico />,
+        title: "",
+      }}
+    >
       <DashboardLayout
         defaultSidebarCollapsed
         initialExpandedItems={[]}
