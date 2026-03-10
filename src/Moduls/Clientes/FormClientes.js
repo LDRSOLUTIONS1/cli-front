@@ -448,8 +448,8 @@ export default function FormClientes() {
                     fullWidth
                     label="Representante Legal"
                     {...register("representante_legal", {
-                      required: "El representante legal es obligatorio",
-                      minLength: { value: 1, message: "Mínimo 1 caracteres" },
+                      //required: "El representante legal es obligatorio",
+                      //minLength: { value: 1, message: "Mínimo 1 caracteres" },
                       maxLength: {
                         value: 200,
                         message: "Máximo 200 caracteres",
@@ -464,8 +464,8 @@ export default function FormClientes() {
                     fullWidth
                     label="Domicilio Fiscal"
                     {...register("domicilio_fiscal", {
-                      required: "El domicilio fiscal es obligatorio",
-                      minLength: { value: 1, message: "Mínimo 1 caracteres" },
+                      //required: "El domicilio fiscal es obligatorio",
+                      //minLength: { value: 1, message: "Mínimo 1 caracteres" },
                       maxLength: {
                         value: 200,
                         message: "Máximo 200 caracteres",
@@ -484,7 +484,7 @@ export default function FormClientes() {
                 label="Correo electrónico"
                 InputLabelProps={{ shrink: !!watch("correo") }}
                 {...register("correo", {
-                  required: "El correo electrónico es obligatorio",
+                  //required: "El correo electrónico es obligatorio",
                   pattern: {
                     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     message: "Ingresa un correo electrónico válido",
