@@ -79,6 +79,10 @@ const ClientesState = ({ children }) => {
           title: "Éxito",
           text: "Cliente agregado con éxito",
           icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/clientes";
+          }
         });
         GetClientes();
       })
@@ -93,6 +97,10 @@ const ClientesState = ({ children }) => {
           title: "Éxito",
           text: "Cliente actualizado con éxito",
           icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/clientes";
+          }
         });
         GetClientes();
       })

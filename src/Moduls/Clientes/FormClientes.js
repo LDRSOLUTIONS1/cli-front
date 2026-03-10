@@ -35,11 +35,10 @@ export default function FormClientes() {
 
   const { id } = useParams();
   const [cliente, saveCliente] = useState(null);
-  console.log("El cliente", cliente);
 
   useEffect(() => {
     if (!id) return;
-    let url = `/clientes/${id}`;
+    let url = `/clientes/editar/${id}`;
     MethodGet(url)
       .then((res) => {
         saveCliente(res.data);
