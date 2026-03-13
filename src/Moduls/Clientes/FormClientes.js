@@ -233,7 +233,7 @@ export default function FormClientes() {
       marca_id: Number(data.marca_id),
       tipo_cliente_id: Number(data.tipo_cliente_id),
       tipo_persona: Number(data.tipo_persona),
-      regimen_fiscal_id: Number(data.regimen_fiscal_id),
+      regimen_fiscal_id: Number(data.regimen_fiscal_id) || null,
       grupo_id: Number(data.grupo_id),
       estatus: data.estatus,
       tipo_negocio: data.tipo_negocio,
@@ -339,7 +339,7 @@ export default function FormClientes() {
                 name="regimen_fiscal_id"
                 label="Régimen fiscal"
                 control={control}
-                rules={{ required: "Debes seleccionar un régimen fiscal" }}
+                //rules={{ required: "Debes seleccionar un régimen fiscal" }}
                 errors={errors}
                 options={regimenesFiscales}
                 getOptionLabel={(item) =>
@@ -355,8 +355,6 @@ export default function FormClientes() {
                     fullWidth
                     label="Nombre"
                     {...register("nombre_fisica", {
-                      required: "El nombre es obligatorio",
-                      minLength: { value: 1, message: "Mínimo 1 caracteres" },
                       maxLength: {
                         value: 200,
                         message: "Máximo 200 caracteres",
@@ -371,8 +369,6 @@ export default function FormClientes() {
                     fullWidth
                     label="Apellido Paterno"
                     {...register("apellido_paterno", {
-                      required: "El apellido paterno es obligatorio",
-                      minLength: { value: 1, message: "Mínimo 1 caracteres" },
                       maxLength: {
                         value: 200,
                         message: "Máximo 200 caracteres",
@@ -387,8 +383,6 @@ export default function FormClientes() {
                     fullWidth
                     label="Apellido Materno"
                     {...register("apellido_materno", {
-                      required: "El apellido materno es obligatorio",
-                      minLength: { value: 1, message: "Mínimo 1 caracteres" },
                       maxLength: {
                         value: 200,
                         message: "Máximo 200 caracteres",
@@ -406,9 +400,7 @@ export default function FormClientes() {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    {...register("fecha_nacimiento", {
-                      required: "La fecha de nacimiento es obligatoria",
-                    })}
+                    {...register("fecha_nacimiento", {})}
                     error={!!errors.fecha_nacimiento}
                     helperText={errors.fecha_nacimiento?.message}
                   />
@@ -418,7 +410,6 @@ export default function FormClientes() {
                     fullWidth
                     label="CURP"
                     {...register("curp", {
-                      required: "El CURP es obligatorio",
                       minLength: {
                         value: 18,
                         message: "El CURP debe tener 18 caracteres",
@@ -571,11 +562,6 @@ export default function FormClientes() {
                 label="No. repuve"
                 InputLabelProps={{ shrink: !!watch("repve") }}
                 {...register("repve", {
-                  required: "El no. repuve es obligatorio",
-                  minLength: {
-                    value: 1,
-                    message: "Mínimo 1 caracteres",
-                  },
                   maxLength: {
                     value: 50,
                     message: "Máximo 50 caracteres",

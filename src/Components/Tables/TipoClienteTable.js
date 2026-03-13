@@ -68,8 +68,8 @@ const TipoClienteTable = () => {
       minWidth: 150,
       type: "singleSelect",
       valueOptions: [
-        { value: 1, label: "Persona Física" },
-        { value: 2, label: "Persona Moral" },
+        { value: "1", label: "Persona Física" },
+        { value: "2", label: "Persona Moral" },
       ],
     },
     {

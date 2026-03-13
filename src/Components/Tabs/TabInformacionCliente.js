@@ -28,7 +28,7 @@ const TabInformacionCliente = ({ cliente }) => {
               <strong>Tipo de persona</strong>
             </TableCell>
             <TableCell>
-              {cliente.tipo_persona === 1 ? "Física" : "Moral"}
+              {cliente.tipo_persona === "1" ? "Física" : "Moral"}
             </TableCell>
           </TableRow>
 
