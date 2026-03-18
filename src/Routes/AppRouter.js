@@ -9,6 +9,11 @@ import { PrivateRouter } from "./PrivateRouter";
 import AuthContext from "../Context/Auth/AuthContext";
 import LoadingComponent from "../Components/Loading/LoadingComponent";
 import AdminRoutes from "./AdminRoutes";
+import SuperAdminRoutes from "./SuperAdminRoutes";
+import InternoRoutes from "./InternoRoutes";
+import ExternoRoutes from "./ExternoRoutes";
+import GubernamentalRoutes from "./GubernamentalRoutes";
+import DistribuidoresRoutes from "./DistribuidoresRoutes";
 
 const AppRouter = () => {
   const { autenticado, usuarioAutenticado, cargando, loginExterno, errorAuth } =
@@ -45,7 +50,12 @@ const AppRouter = () => {
   const rolid = localStorage.getItem("rolid");
   let PrivateComponent = null;
 
-  if (rolid === "1") PrivateComponent = AdminRoutes;
+  if (rolid === "1" || rolid === "1") PrivateComponent = SuperAdminRoutes;
+  if (rolid === "2" || rolid === "2") PrivateComponent = AdminRoutes;
+  if (rolid === "3" || rolid === "3") PrivateComponent = InternoRoutes;
+  if (rolid === "4" || rolid === "4") PrivateComponent = ExternoRoutes;
+  if (rolid === "5" || rolid === "5") PrivateComponent = GubernamentalRoutes;
+  if (rolid === "6" || rolid === "6") PrivateComponent = DistribuidoresRoutes;
 
   return (
     <Router>

@@ -18,6 +18,7 @@ import DepartamentosContext from "../../Context/Departamentos/DepartamentosConte
 export default function TablePuestos({ rows = [] }) {
   const { departamentos, GetDepartamentos } = useContext(DepartamentosContext);
   const { puesto, GetPuesto, DeletePuestos } = useContext(PuestosContext);
+  const rolid = Number(localStorage.getItem("rolid"));
 
   useEffect(() => {
     GetDepartamentos();
@@ -114,23 +115,30 @@ export default function TablePuestos({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-          label="Ver detalles"
-          onClick={() => handleClickOpen(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-          label="Editar"
-          onClick={() => handleClickOpenEdit(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-          label="Eliminar"
-          onClick={() => DeletePuestos(params.id)}
-        />,
-      ],
+      getActions: (params) => {
+        const actions = [
+          <GridActionsCellItem
+            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+            label="Ver detalles"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+        ];
+        if (rolid !== 2) {
+          actions.push(
+            <GridActionsCellItem
+              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+              label="Editar"
+              onClick={() => handleClickOpenEdit(params.id)}
+            />,
+            <GridActionsCellItem
+              icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+              label="Eliminar"
+              onClick={() => DeletePuestos(params.id)}
+            />,
+          );
+        }
+        return actions;
+      },
     },
   ];
 
@@ -181,14 +189,16 @@ export default function TablePuestos({ rows = [] }) {
                   }}
                 >
                   <Typography fontWeight={600}>Total: {rows.length}</Typography>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={handleClickOpenAdd}
-                    sx={{ borderRadius: 3 }}
-                  >
-                    Nuevo Puesto
-                  </Button>
+                  {rolid !== 2 && (
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={handleClickOpenAdd}
+                      sx={{ borderRadius: 3 }}
+                    >
+                      Nuevo Puesto
+                    </Button>
+                  )}
                 </Box>
               ),
             }}

@@ -3,28 +3,28 @@ import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { esES } from "@mui/x-data-grid/locales";
-import ModalDetalleDepartamento from "../Modals/ModalDetalleDepartamento";
-import DepartamentosContext from "../../Context/Departamentos/DepartamentosContext";
+import ModalDetalleUser from "../Modals/ModalDetalleUser";
+import UsuariosContext from "../../Context/Usuarios/UsuariosContext";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { dateFormatter } from "../../utils/dateFormatter";
-import EditDepartamentos from "../../Moduls/Departamentos/EditDepartamentos";
+import EditUsuarios from "../../Moduls/Usuarios/EditUsuarios";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
-import AddDepartamentos from "../../Moduls/Departamentos/AddDepartamentos";
+import AddUsuarios from "../../Moduls/Usuarios/AddUsuarios";
 import { EstadoChip } from "../../utils/EstadoChip";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import AsignarTipoCliente from "../../Moduls/Usuarios/AsignarTipoCliente";
 
-export default function TableDepartamentos({ rows = [] }) {
-  const rolid = Number(localStorage.getItem("rolid"));
-  const { departamento, GetDepartamento, DeleteDepartamentos } =
-    useContext(DepartamentosContext);
+export default function TableUsuarios({ rows = [] }) {
+  const { usuario, GetUsuario, DeleteUsuarios } = useContext(UsuariosContext);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [openModal, setOpenModal] = useState(false);
   const handleClickOpen = async (id) => {
-    await GetDepartamento(id);
+    await GetUsuario(id);
     setOpenModal(true);
   };
   const handleClose = () => {
@@ -32,14 +32,14 @@ export default function TableDepartamentos({ rows = [] }) {
   };
 
   const [modalUpdate, OpenModalUpdate] = useState(false);
-  const [id_departamento, saveIdDepartamento] = useState(null);
+  const [id_usuario, saveIdUsuario] = useState(null);
   const handleClickOpenEdit = (id) => {
     OpenModalUpdate(true);
-    saveIdDepartamento(id);
+    saveIdUsuario(id);
   };
   const handleClickCloseEdit = () => {
     OpenModalUpdate(false);
-    saveIdDepartamento(null);
+    saveIdUsuario(null);
   };
 
   const [modalAdd, setOpenModalAdd] = useState(false);
@@ -49,6 +49,27 @@ export default function TableDepartamentos({ rows = [] }) {
 
   const handleClickCloseAdd = () => {
     setOpenModalAdd(false);
+  };
+
+  const [modalAsignar, setOpenModalAsignar] = useState(false);
+  const [id_usuario_asignar, saveIdUsuarioAsignar] = useState(null);
+  const handleClickOpenAsignar = (id) => {
+    setOpenModalAsignar(true);
+    saveIdUsuarioAsignar(id);
+  };
+
+  const handleCloseAsignar = () => {
+    setOpenModalAsignar(false);
+    saveIdUsuarioAsignar(null);
+  };
+
+  const ROLES = {
+    1: "Super Admin",
+    2: "Admin",
+    3: "Interno",
+    4: "Externo",
+    5: "Gubernamental",
+    6: "Distribuidor",
   };
 
   const columns = [
@@ -61,29 +82,61 @@ export default function TableDepartamentos({ rows = [] }) {
       minWidth: 100,
     },
     {
-      field: "nombre",
-      headerName: "NOMBRE",
+      field: "numcolaborador",
+      headerName: "NUM COLABORADOR",
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
     },
     {
-      field: "descripcion",
-      headerName: "DESCRIPCIÓN",
+      field: "nombres",
+      headerName: "NOMBRES",
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
     },
-
+    {
+      field: "apellidos",
+      headerName: "APELLIDOS",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "telefono",
+      headerName: "TELEFONO",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "email_user",
+      headerName: "CORREO",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "rol",
+      headerName: "ROL",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+      renderCell: (params) => ROLES[params.row.rolid],
+    },
     {
       field: "fecha_registro",
       headerName: "FECHA REGISTRO",
       flex: 1,
       align: "center",
       headerAlign: "center",
-      minWidth: 150,
+      minWidth: 100,
       renderCell: (params) => dateFormatter(params.value),
     },
     {
@@ -102,31 +155,29 @@ export default function TableDepartamentos({ rows = [] }) {
       flex: 0.5,
       align: "center",
       headerAlign: "center",
-      minWidth: 100,
-      getActions: (params) => {
-        const actions = [
-          <GridActionsCellItem
-            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-            label="Ver detalles"
-            onClick={() => handleClickOpen(params.id)}
-          />,
-        ];
-        if (rolid !== 2) {
-          actions.push(
-            <GridActionsCellItem
-              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-              label="Editar"
-              onClick={() => handleClickOpenEdit(params.id)}
-            />,
-            <GridActionsCellItem
-              icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-              label="Eliminar"
-              onClick={() => DeleteDepartamentos(params.id)}
-            />,
-          );
-        }
-        return actions;
-      },
+      minWidth: 200,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+          label="Ver detalles"
+          onClick={() => handleClickOpen(params.id)}
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+          label="Editar"
+          onClick={() => handleClickOpenEdit(params.id)}
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+          label="Eliminar"
+          onClick={() => DeleteUsuarios(params.id)}
+        />,
+        <GridActionsCellItem
+          icon={<ManageAccountsIcon sx={{ color: "#000f7d" }} />}
+          label="Asignar tipo de cliente"
+          onClick={() => handleClickOpenAsignar(params.id)}
+        />,
+      ],
     },
   ];
 
@@ -141,7 +192,7 @@ export default function TableDepartamentos({ rows = [] }) {
         }}
       >
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-          Listado de Departamentos
+          Listado de Usuarios
         </Typography>
 
         <Box
@@ -177,16 +228,14 @@ export default function TableDepartamentos({ rows = [] }) {
                   }}
                 >
                   <Typography fontWeight={600}>Total: {rows.length}</Typography>
-                  {rolid !== 2 && (
-                    <Button
-                      variant="contained"
-                      startIcon={<AddIcon />}
-                      onClick={handleClickOpenAdd}
-                      sx={{ borderRadius: 3 }}
-                    >
-                      Nuevo Departamento
-                    </Button>
-                  )}
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleClickOpenAdd}
+                    sx={{ borderRadius: 3 }}
+                  >
+                    Nuevo Usuario
+                  </Button>
                 </Box>
               ),
             }}
@@ -221,21 +270,29 @@ export default function TableDepartamentos({ rows = [] }) {
           />
         </Box>
       </Paper>
-      <ModalDetalleDepartamento
+      <ModalDetalleUser
         open={openModal}
         handleClose={handleClose}
-        departamento={departamento}
+        usuario={usuario}
       />
 
-      {id_departamento !== null && (
-        <EditDepartamentos
+      {id_usuario !== null && (
+        <EditUsuarios
           open={modalUpdate}
           handleClose={handleClickCloseEdit}
-          id={id_departamento}
+          id={id_usuario}
         />
       )}
 
-      <AddDepartamentos open={modalAdd} handleClose={handleClickCloseAdd} />
+      <AddUsuarios open={modalAdd} handleClose={handleClickCloseAdd} />
+
+      {id_usuario_asignar !== null && (
+        <AsignarTipoCliente
+          open={modalAsignar}
+          handleClose={handleCloseAsignar}
+          id={id_usuario_asignar}
+        />
+      )}
     </>
   );
 }

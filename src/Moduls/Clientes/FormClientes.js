@@ -57,6 +57,11 @@ export default function FormClientes() {
     formState: { errors },
     handleSubmit,
   } = useForm();
+  const tipoClienteSeleccionado = watch("tipo_cliente_id");
+  const esInterno = tipoClienteSeleccionado === 1;
+  const esExterno = tipoClienteSeleccionado === 2;
+  const esGubernamental = tipoClienteSeleccionado === 3;
+  const esDistribuidor = tipoClienteSeleccionado === 4;
 
   const direccionFiscalDiferente = watch("direccion_fiscal_diferente");
   const tipoPersonaSeleccionada = watch("tipo_persona");
@@ -432,6 +437,7 @@ export default function FormClientes() {
                 </Grid>
               </>
             )}
+            
             {tipoPersonaSeleccionada === 2 && (
               <>
                 <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -468,50 +474,192 @@ export default function FormClientes() {
                 </Grid>
               </>
             )}
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <TextField
-                type="email"
-                fullWidth
-                label="Correo electrónico"
-                InputLabelProps={{ shrink: !!watch("correo") }}
-                {...register("correo", {
-                  //required: "El correo electrónico es obligatorio",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Ingresa un correo electrónico válido",
-                  },
-                })}
-                error={!!errors.correo}
-                helperText={errors.correo?.message}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <SelectField
-                name="grupo_id"
-                label="Grupo"
-                control={control}
-                rules={{ required: "Debes seleccionar un grupo" }}
-                errors={errors}
-                options={grupos}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <TextField
-                fullWidth
-                label="Nombre comercial"
-                InputLabelProps={{ shrink: !!watch("nombre_comercial") }}
-                {...register("nombre_comercial", {
-                  required: "El nombre comercial es obligatorio",
-                  minLength: { value: 1, message: "Mínimo 1 caracteres" },
-                  maxLength: {
-                    value: 200,
-                    message: "Máximo 200 caracteres",
-                  },
-                })}
-                error={!!errors.nombre_comercial}
-                helperText={errors.nombre_comercial?.message}
-              />
-            </Grid>
+
+            {esDistribuidor && (
+              <>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    type="email"
+                    fullWidth
+                    label="Correo electrónico"
+                    InputLabelProps={{ shrink: !!watch("correo") }}
+                    {...register("correo", {
+                      //required: "El correo electrónico es obligatorio",
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Ingresa un correo electrónico válido",
+                      },
+                    })}
+                    error={!!errors.correo}
+                    helperText={errors.correo?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <SelectField
+                    name="grupo_id"
+                    label="Grupo"
+                    control={control}
+                    rules={{ required: "Debes seleccionar un grupo" }}
+                    errors={errors}
+                    options={grupos}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="Nombre comercial"
+                    InputLabelProps={{ shrink: !!watch("nombre_comercial") }}
+                    {...register("nombre_comercial", {
+                      required: "El nombre comercial es obligatorio",
+                      minLength: { value: 1, message: "Mínimo 1 caracteres" },
+                      maxLength: {
+                        value: 200,
+                        message: "Máximo 200 caracteres",
+                      },
+                    })}
+                    error={!!errors.nombre_comercial}
+                    helperText={errors.nombre_comercial?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="RFC"
+                    InputLabelProps={{ shrink: !!watch("rfc") }}
+                    {...register("rfc", {
+                      required: "El RFC es obligatorio",
+                      minLength: {
+                        value: 12,
+                        message: "El RFC debe tener al menos 12 caracteres",
+                      },
+                      maxLength: {
+                        value: 13,
+                        message: "El RFC debe tener como máximo 13 caracteres",
+                      },
+                      pattern: {
+                        value: /^([A-ZÑ&]{3,4})\d{6}([A-Z\d]{3})$/,
+                        message: "Ingresa un RFC valido",
+                      },
+                      onChange: (e) => {
+                        e.target.value = e.target.value.toUpperCase().trim();
+                      },
+                    })}
+                    error={!!errors.rfc}
+                    helperText={errors.rfc?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="No. repuve"
+                    InputLabelProps={{ shrink: !!watch("repve") }}
+                    {...register("repve", {
+                      maxLength: {
+                        value: 50,
+                        message: "Máximo 50 caracteres",
+                      },
+                    })}
+                    error={!!errors.repve}
+                    helperText={errors.repve?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="Plaza"
+                    InputLabelProps={{ shrink: !!watch("plaza") }}
+                    {...register("plaza", {
+                      required: "La plaza es obligatoria",
+                      minLength: {
+                        value: 1,
+                        message: "Mínimo 1 caracteres",
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: "Máximo 100 caracteres",
+                      },
+                    })}
+                    error={!!errors.plaza}
+                    helperText={errors.plaza?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="Clasificación"
+                    InputLabelProps={{ shrink: !!watch("clasificacion") }}
+                    {...register("clasificacion", {
+                      required: "La clasificación es obligatoria",
+                      minLength: {
+                        value: 1,
+                        message: "Mínimo 1 caracteres",
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: "Máximo 100 caracteres",
+                      },
+                    })}
+                    error={!!errors.clasificacion}
+                    helperText={errors.clasificacion?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <SelectField
+                    name="estatus"
+                    label="Estatus"
+                    control={control}
+                    rules={{ required: "Debes seleccionar un estatus" }}
+                    errors={errors}
+                    options={tiposEstatus}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <SelectField
+                    name="tipo_negocio"
+                    label="Tipo de negocio"
+                    control={control}
+                    rules={{ required: "Debes seleccionar un tipo de negocio" }}
+                    errors={errors}
+                    options={tiposNegocio}
+                  />
+                </Grid>
+                {tipoNegocioSeleccionado === "Sucursal" && (
+                  <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                    <SelectField
+                      name="matriz_id"
+                      label="¿A qué matriz pertenece la sucursal?"
+                      control={control}
+                      rules={{ required: "Debes seleccionar una matriz" }}
+                      errors={errors}
+                      options={clientes}
+                      getOptionLabel={(item) => item.razon_social}
+                    />
+                  </Grid>
+                )}
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <MultiSelect
+                    name="modelo"
+                    control={control}
+                    label="Modelos"
+                    options={modelos}
+                    rules={{ required: "Debes seleccionar al menos un modelo" }}
+                    errors={errors}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <MultiSelect
+                    name="regional"
+                    control={control}
+                    label="Regionales"
+                    options={regionales}
+                    rules={{
+                      required: "Debes seleccionar al menos una regional",
+                    }}
+                    errors={errors}
+                  />
+                </Grid>
+              </>
+            )}
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <TextField
                 fullWidth
@@ -529,121 +677,6 @@ export default function FormClientes() {
                 helperText={errors.razon_social?.message}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <TextField
-                fullWidth
-                label="RFC"
-                InputLabelProps={{ shrink: !!watch("rfc") }}
-                {...register("rfc", {
-                  required: "El RFC es obligatorio",
-                  minLength: {
-                    value: 12,
-                    message: "El RFC debe tener al menos 12 caracteres",
-                  },
-                  maxLength: {
-                    value: 13,
-                    message: "El RFC debe tener como máximo 13 caracteres",
-                  },
-                  pattern: {
-                    value: /^([A-ZÑ&]{3,4})\d{6}([A-Z\d]{3})$/,
-                    message: "Ingresa un RFC valido",
-                  },
-                  onChange: (e) => {
-                    e.target.value = e.target.value.toUpperCase().trim();
-                  },
-                })}
-                error={!!errors.rfc}
-                helperText={errors.rfc?.message}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <TextField
-                fullWidth
-                label="No. repuve"
-                InputLabelProps={{ shrink: !!watch("repve") }}
-                {...register("repve", {
-                  maxLength: {
-                    value: 50,
-                    message: "Máximo 50 caracteres",
-                  },
-                })}
-                error={!!errors.repve}
-                helperText={errors.repve?.message}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <TextField
-                fullWidth
-                label="Plaza"
-                InputLabelProps={{ shrink: !!watch("plaza") }}
-                {...register("plaza", {
-                  required: "La plaza es obligatoria",
-                  minLength: {
-                    value: 1,
-                    message: "Mínimo 1 caracteres",
-                  },
-                  maxLength: {
-                    value: 100,
-                    message: "Máximo 100 caracteres",
-                  },
-                })}
-                error={!!errors.plaza}
-                helperText={errors.plaza?.message}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <TextField
-                fullWidth
-                label="Clasificación"
-                InputLabelProps={{ shrink: !!watch("clasificacion") }}
-                {...register("clasificacion", {
-                  required: "La clasificación es obligatoria",
-                  minLength: {
-                    value: 1,
-                    message: "Mínimo 1 caracteres",
-                  },
-                  maxLength: {
-                    value: 100,
-                    message: "Máximo 100 caracteres",
-                  },
-                })}
-                error={!!errors.clasificacion}
-                helperText={errors.clasificacion?.message}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <SelectField
-                name="estatus"
-                label="Estatus"
-                control={control}
-                rules={{ required: "Debes seleccionar un estatus" }}
-                errors={errors}
-                options={tiposEstatus}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <SelectField
-                name="tipo_negocio"
-                label="Tipo de negocio"
-                control={control}
-                rules={{ required: "Debes seleccionar un tipo de negocio" }}
-                errors={errors}
-                options={tiposNegocio}
-              />
-            </Grid>
-            {tipoNegocioSeleccionado === "Sucursal" && (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                <SelectField
-                  name="matriz_id"
-                  label="¿A qué matriz pertenece la sucursal?"
-                  control={control}
-                  rules={{ required: "Debes seleccionar una matriz" }}
-                  errors={errors}
-                  options={clientes}
-                  getOptionLabel={(item) => item.razon_social}
-                />
-              </Grid>
-            )}
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <TextField
                 type="number"
@@ -675,26 +708,6 @@ export default function FormClientes() {
                 })}
                 error={!!errors.telefono_alt}
                 helperText={errors.telefono_alt?.message}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <MultiSelect
-                name="modelo"
-                control={control}
-                label="Modelos"
-                options={modelos}
-                rules={{ required: "Debes seleccionar al menos un modelo" }}
-                errors={errors}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <MultiSelect
-                name="regional"
-                control={control}
-                label="Regionales"
-                options={regionales}
-                rules={{ required: "Debes seleccionar al menos una regional" }}
-                errors={errors}
               />
             </Grid>
           </Grid>
@@ -850,6 +863,7 @@ export default function FormClientes() {
               />
             </Grid>
           </Grid>
+
           {direccionFiscalDiferente && (
             <>
               <Divider sx={{ mt: 2, mb: 2 }}>

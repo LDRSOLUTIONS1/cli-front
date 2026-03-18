@@ -16,6 +16,7 @@ import { EstadoChip } from "../../utils/EstadoChip";
 
 export default function TableMarcas({ rows = [] }) {
   const { marca, GetMarca, DeleteMarcas } = useContext(MarcasContext);
+  const rolid = Number(localStorage.getItem("rolid"));
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -101,23 +102,30 @@ export default function TableMarcas({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-          label="Ver detalles"
-          onClick={() => handleClickOpen(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-          label="Editar"
-          onClick={() => handleClickOpenEdit(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-          label="Eliminar"
-          onClick={() => DeleteMarcas(params.id)}
-        />,
-      ],
+      getActions: (params) => {
+        const actions = [
+          <GridActionsCellItem
+            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+            label="Ver detalles"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+        ];
+        if (rolid !== 2) {
+          actions.push(
+            <GridActionsCellItem
+              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+              label="Editar"
+              onClick={() => handleClickOpenEdit(params.id)}
+            />,
+            <GridActionsCellItem
+              icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+              label="Eliminar"
+              onClick={() => DeleteMarcas(params.id)}
+            />,
+          );
+        }
+        return actions;
+      },
     },
   ];
 
@@ -168,14 +176,16 @@ export default function TableMarcas({ rows = [] }) {
                   }}
                 >
                   <Typography fontWeight={600}>Total: {rows.length}</Typography>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={handleClickOpenAdd}
-                    sx={{ borderRadius: 3 }}
-                  >
-                    Nueva Marca
-                  </Button>
+                  {rolid !== 2 && (
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={handleClickOpenAdd}
+                      sx={{ borderRadius: 3 }}
+                    >
+                      Nueva Marca
+                    </Button>
+                  )}
                 </Box>
               ),
             }}

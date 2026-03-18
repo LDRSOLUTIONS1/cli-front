@@ -17,6 +17,7 @@ import EditContactos from "../../Moduls/Contactos/EditContactos";
 import ModalDetalleContacto from "../Modals/ModalDetalleContacto";
 
 export default function TableContactos({ rows = [] }) {
+  const rolid = Number(localStorage.getItem("rolid"));
   const { puestos, GetPuestos } = useContext(PuestosContext);
   const { clientes, GetClientes } = useContext(ClientesContext);
   const { contacto, GetContacto, DeleteContactos } =
@@ -134,23 +135,30 @@ export default function TableContactos({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-          label="Ver detalles"
-          onClick={() => handleClickOpen(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-          label="Editar"
-          onClick={() => handleClickOpenEdit(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-          label="Eliminar"
-          onClick={() => DeleteContactos(params.id)}
-        />,
-      ],
+      getActions: (params) => {
+        const actions = [
+          <GridActionsCellItem
+            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+            label="Ver detalles"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+        ];
+        if (rolid !== 2) {
+          actions.push(
+            <GridActionsCellItem
+              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+              label="Editar"
+              onClick={() => handleClickOpenEdit(params.id)}
+            />,
+            <GridActionsCellItem
+              icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+              label="Eliminar"
+              onClick={() => DeleteContactos(params.id)}
+            />,
+          );
+        }
+        return actions;
+      },
     },
   ];
 
@@ -201,14 +209,16 @@ export default function TableContactos({ rows = [] }) {
                   }}
                 >
                   <Typography fontWeight={600}>Total: {rows.length}</Typography>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={handleClickOpenAdd}
-                    sx={{ borderRadius: 3 }}
-                  >
-                    Nuevo Contacto
-                  </Button>
+                  {rolid !== 2 && (
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={handleClickOpenAdd}
+                      sx={{ borderRadius: 3 }}
+                    >
+                      Nuevo Contacto
+                    </Button>
+                  )}
                 </Box>
               ),
             }}
