@@ -105,7 +105,10 @@ const ModalDetalleContacto = ({ open, handleClose, contacto }) => {
                 <TableCell>
                   <strong>Cliente:</strong>
                 </TableCell>
-                <TableCell>{contacto.cliente?.nombre_comercial}</TableCell>
+                <TableCell>
+                  {contacto.cliente?.nombre_comercial ||
+                    contacto.cliente?.razon_social}
+                </TableCell>
               </TableRow>
 
               <TableRow>

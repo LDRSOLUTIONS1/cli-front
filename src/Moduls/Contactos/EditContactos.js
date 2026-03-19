@@ -71,7 +71,7 @@ export default function EditContactos({ open, handleClose, id, puestos, clientes
                   </MenuItem>
                   {clientes.map((cliente) => (
                     <MenuItem key={cliente.id} value={cliente.id}>
-                      {cliente.nombre_comercial}
+                      {cliente.nombre_comercial || cliente.razon_social} 
                     </MenuItem>
                   ))}
                 </TextField>
