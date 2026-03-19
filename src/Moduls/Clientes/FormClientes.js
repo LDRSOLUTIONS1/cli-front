@@ -20,6 +20,7 @@ import SelectMunicipios from "../../Components/Forms/SelectOptions/SelectMunicip
 import MarcasContext from "../../Context/Marcas/MarcasContext";
 import { useParams } from "react-router-dom";
 import MethodGet from "../../Config/Service";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function FormClientes() {
   const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
@@ -195,85 +196,88 @@ export default function FormClientes() {
     }
   }, [direccionFiscalDiferente]);
 
-  const onSubmit = (data) => {
-    const {
-      calle,
-      numero_ext,
-      numero_int,
-      colonia,
-      codigo_postal,
-      pais_id,
-      estado_id,
-      municipio_id,
+  const [cargando, setCargando] = useState(false);
 
-      fiscal_calle,
-      fiscal_numero_ext,
-      fiscal_numero_int,
-      fiscal_colonia,
-      fiscal_codigo_postal,
-      fiscal_pais_id,
-      fiscal_estado_id,
-      fiscal_municipio_id,
+  const onSubmit = async (data) => {
+    if (cargando) return; 
 
-      modelo,
-      regional,
+    setCargando(true);
 
-      ...rest
-    } = data;
+    try {
+      const {
+        calle,
+        numero_ext,
+        numero_int,
+        colonia,
+        codigo_postal,
+        pais_id,
+        estado_id,
+        municipio_id,
+        fiscal_calle,
+        fiscal_numero_ext,
+        fiscal_numero_int,
+        fiscal_colonia,
+        fiscal_codigo_postal,
+        fiscal_pais_id,
+        fiscal_estado_id,
+        fiscal_municipio_id,
+        modelo,
+        regional,
+        ...rest
+      } = data;
 
-    const direccionPrincipal = {
-      tipo: data.tipo,
-      calle,
-      numero_ext,
-      numero_int,
-      colonia,
-      codigo_postal,
-      pais_id: Number(pais_id),
-      estado_id: Number(estado_id),
-      municipio_id: Number(municipio_id),
-    };
+      const direccionPrincipal = {
+        tipo: data.tipo,
+        calle,
+        numero_ext,
+        numero_int,
+        colonia,
+        codigo_postal,
+        pais_id: Number(pais_id),
+        estado_id: Number(estado_id),
+        municipio_id: Number(municipio_id),
+      };
 
-    const payload = {
-      ...rest,
-      marca_id: Number(data.marca_id),
-      tipo_cliente_id: Number(data.tipo_cliente_id),
-      tipo_persona: Number(data.tipo_persona),
-      regimen_fiscal_id: Number(data.regimen_fiscal_id) || null,
-      grupo_id: Number(data.grupo_id),
-      estatus: data.estatus,
-      tipo_negocio: data.tipo_negocio,
-      matriz_id: data.matriz_id ? Number(data.matriz_id) : null,
+      const payload = {
+        ...rest,
+        marca_id: Number(data.marca_id),
+        tipo_cliente_id: Number(data.tipo_cliente_id),
+        tipo_persona: Number(data.tipo_persona),
+        regimen_fiscal_id: Number(data.regimen_fiscal_id) || null,
+        grupo_id: Number(data.grupo_id) || null,
+        estatus: data.estatus,
+        tipo_negocio: data.tipo_negocio,
+        matriz_id: data.matriz_id ? Number(data.matriz_id) : null,
+        modelo: modelo || [],
+        regional: regional || [],
+        direccion_principal: direccionPrincipal,
+        direccion_fiscal: data.direccion_fiscal_diferente
+          ? {
+              tipo: "Fiscal",
+              calle: fiscal_calle,
+              numero_ext: fiscal_numero_ext,
+              numero_int: fiscal_numero_int,
+              colonia: fiscal_colonia,
+              codigo_postal: fiscal_codigo_postal,
+              pais_id: Number(fiscal_pais_id),
+              estado_id: Number(fiscal_estado_id),
+              municipio_id: Number(fiscal_municipio_id),
+            }
+          : {
+              ...direccionPrincipal,
+              tipo: "Fiscal",
+            },
+      };
 
-      modelo: modelo || [],
-      regional: regional || [],
-
-      direccion_principal: direccionPrincipal,
-
-      direccion_fiscal: data.direccion_fiscal_diferente
-        ? {
-            tipo: "Fiscal",
-            calle: fiscal_calle,
-            numero_ext: fiscal_numero_ext,
-            numero_int: fiscal_numero_int,
-            colonia: fiscal_colonia,
-            codigo_postal: fiscal_codigo_postal,
-            pais_id: Number(fiscal_pais_id),
-            estado_id: Number(fiscal_estado_id),
-            municipio_id: Number(fiscal_municipio_id),
-          }
-        : {
-            ...direccionPrincipal,
-            tipo: "Fiscal",
-          },
-    };
-
-    if (id) {
-      UpdateClientes({
-        id,
-        ...payload,
-      });
-    } else {
-      CreateClientes(payload);
+      if (id) {
+        await UpdateClientes({ id, ...payload });
+      } else {
+        await CreateClientes(payload);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -437,7 +441,7 @@ export default function FormClientes() {
                 </Grid>
               </>
             )}
-            
+
             {tipoPersonaSeleccionada === 2 && (
               <>
                 <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -1005,7 +1009,14 @@ export default function FormClientes() {
               type="submit"
               variant="contained"
               size="large"
-              startIcon={<FileDownloadDoneIcon />}
+              disabled={cargando}
+              startIcon={
+                cargando ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <FileDownloadDoneIcon />
+                )
+              }
               sx={{
                 px: 4,
                 py: 1.5,
@@ -1014,7 +1025,11 @@ export default function FormClientes() {
                 textTransform: "none",
               }}
             >
-              {id ? "Actualizar cliente" : "Guardar cliente"}
+              {cargando
+                ? "Guardando..."
+                : id
+                  ? "Actualizar cliente"
+                  : "Guardar cliente"}
             </Button>
           </Box>
         </form>

@@ -205,12 +205,27 @@ export default function TableMarcas({ rows = [] }) {
               },
 
               "& .MuiDataGrid-cell": {
-                borderBottom: "2px solid #1976D2",
+                borderBottom: "1px solid #e0e0e0",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               },
 
               "& .MuiDataGrid-columnSeparator": {
-                display: "none",
+                opacity: 0.3,
+                cursor: "col-resize",
               },
+
+              "& .MuiDataGrid-columnSeparator:hover": {
+                opacity: 1,
+                color: theme.palette.primary.main,
+              },
+
+              "& .MuiDataGrid-columnHeader:active .MuiDataGrid-columnSeparator":
+                {
+                  color: theme.palette.primary.main,
+                  width: 2,
+                },
 
               "& .MuiDataGrid-row:hover": {
                 backgroundColor: theme.palette.action.hover,

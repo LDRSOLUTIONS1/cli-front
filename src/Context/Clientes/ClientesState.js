@@ -71,40 +71,50 @@ const ClientesState = ({ children }) => {
       .catch(handleError);
   };
 
-  const CreateClientes = (data) => {
-    MethodPost("/clientes", data)
-      .then((res) => {
-        dispatch({ type: ADD_CLIENTES, payload: res.data });
-        Swal.fire({
-          title: "Éxito",
-          text: "Cliente agregado con éxito",
-          icon: "success",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "/clientes";
-          }
-        });
-        GetClientes();
-      })
-      .catch(handleError);
+  const CreateClientes = async (data) => {
+    try {
+      const res = await MethodPost("/clientes", data);
+
+      dispatch({ type: ADD_CLIENTES, payload: res.data });
+
+      await Swal.fire({
+        title: "Éxito",
+        text: "Cliente agregado con éxito",
+        icon: "success",
+      });
+
+      window.location.href = "/clientes";
+
+      GetClientes();
+
+      return res;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
   };
 
-  const UpdateClientes = (data) => {
-    MethodPut(`/clientes/${data.id}`, data)
-      .then((res) => {
-        dispatch({ type: UPDATE_CLIENTES, payload: res.data });
-        Swal.fire({
-          title: "Éxito",
-          text: "Cliente actualizado con éxito",
-          icon: "success",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "/clientes";
-          }
-        });
-        GetClientes();
-      })
-      .catch(handleError);
+  const UpdateClientes = async (data) => {
+    try {
+      const res = await MethodPut(`/clientes/${data.id}`, data);
+
+      dispatch({ type: UPDATE_CLIENTES, payload: res.data });
+
+      await Swal.fire({
+        title: "Éxito",
+        text: "Cliente actualizado con éxito",
+        icon: "success",
+      });
+
+      window.location.href = "/clientes";
+
+      GetClientes();
+
+      return res;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
   };
 
   const DeleteClientes = (id) => {
