@@ -18,6 +18,7 @@ import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { createTheme } from "@mui/material/styles";
 import AuthContext from "../../Context/Auth/AuthContext";
 import LogoDinamico from "./LogoDinamico";
+import { tienePermisoMenu } from "../../utils/roles";
 
 const theme = createTheme({
   cssVariables: {
@@ -102,34 +103,22 @@ const MODULOS = [
   },
 ];
 
-const PERMISOS_POR_ROL = {
-  1: [1, 2, 3, 31, 32, 33, 34, 35, 4, 5, 6, 7], // SUPER ADMIN
-  2: [1, 2, 3, 31, 32, 33, 34, 35, 4, 5, 6], // ADMIN
-  3: [1], // INTERNO
-  4: [2], // EXTERNO
-  5: [1, 3, 31, 35, 4, 5, 6], // GUBERNAMENTAL
-  6: [1, 3, 31, 33, 34, 35, 4, 5, 6], // DISTRIBUIDOR
-};
-
 const construirMenu = (rolid) => {
-  const permisos = PERMISOS_POR_ROL[rolid] || [];
+  return MODULOS.map((modulo) => {
+    if (!tienePermisoMenu(rolid, modulo.id)) return null;
+    if (!modulo.children) return modulo;
 
-  return MODULOS.filter((modulo) => permisos.includes(modulo.id))
-    .map((modulo) => {
-      if (!modulo.children) return modulo;
+    const childrenFiltrados = modulo.children.filter((child) =>
+      tienePermisoMenu(rolid, child.id),
+    );
 
-      const childrenFiltrados = modulo.children.filter((child) =>
-        permisos.includes(child.id),
-      );
+    if (childrenFiltrados.length === 0) return null;
 
-      if (childrenFiltrados.length === 0) return null;
-
-      return {
-        ...modulo,
-        children: childrenFiltrados,
-      };
-    })
-    .filter(Boolean);
+    return {
+      ...modulo,
+      children: childrenFiltrados,
+    };
+  }).filter(Boolean);
 };
 
 export default function Header({ children }) {

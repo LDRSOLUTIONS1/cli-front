@@ -156,28 +156,35 @@ export default function TableUsuarios({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 200,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-          label="Ver detalles"
-          onClick={() => handleClickOpen(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-          label="Editar"
-          onClick={() => handleClickOpenEdit(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-          label="Eliminar"
-          onClick={() => DeleteUsuarios(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<ManageAccountsIcon sx={{ color: "#00ff2f" }} />}
-          label="Asignar tipo de cliente"
-          onClick={() => handleClickOpenAsignar(params.id)}
-        />,
-      ],
+      getActions: (params) => {
+        const actions = [
+          <GridActionsCellItem
+            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+            label="Ver detalles"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+          <GridActionsCellItem
+            icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+            label="Editar"
+            onClick={() => handleClickOpenEdit(params.id)}
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+            label="Eliminar"
+            onClick={() => DeleteUsuarios(params.id)}
+          />,
+        ];
+        if (params.row.rolid !== 1 && params.row.rolid !== 2) {
+          actions.push(
+            <GridActionsCellItem
+              icon={<ManageAccountsIcon sx={{ color: "#00ff2f" }} />}
+              label="Asignar tipo de cliente"
+              onClick={() => handleClickOpenAsignar(params.id)}
+            />,
+          );
+        }
+        return actions;
+      },
     },
   ];
 

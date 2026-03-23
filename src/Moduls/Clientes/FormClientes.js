@@ -199,7 +199,7 @@ export default function FormClientes() {
   const [cargando, setCargando] = useState(false);
 
   const onSubmit = async (data) => {
-    if (cargando) return; 
+    if (cargando) return;
 
     setCargando(true);
 
@@ -306,7 +306,7 @@ export default function FormClientes() {
   return (
     <Layout>
       <Grid container spacing={2} sx={{ padding: 2 }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
           <Divider sx={{ mt: 2, mb: 2 }}>
             <Typography variant="button" gutterBottom sx={{ display: "block" }}>
               Información general
@@ -698,22 +698,56 @@ export default function FormClientes() {
                 helperText={errors.telefono?.message}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <TextField
-                type="number"
-                fullWidth
-                label="Teléfono alternativo"
-                InputLabelProps={{ shrink: !!watch("telefono_alt") }}
-                {...register("telefono_alt", {
-                  pattern: {
-                    value: /^\d{10}$/,
-                    message: "El teléfono alternativo debe tener 10 dígitos",
-                  },
-                })}
-                error={!!errors.telefono_alt}
-                helperText={errors.telefono_alt?.message}
-              />
-            </Grid>
+            {esDistribuidor && (
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                <TextField
+                  type="number"
+                  fullWidth
+                  label="Teléfono alternativo"
+                  InputLabelProps={{ shrink: !!watch("telefono_alt") }}
+                  {...register("telefono_alt", {
+                    pattern: {
+                      value: /^\d{10}$/,
+                      message: "El teléfono alternativo debe tener 10 dígitos",
+                    },
+                  })}
+                  error={!!errors.telefono_alt}
+                  helperText={errors.telefono_alt?.message}
+                />
+              </Grid>
+            )}
+            {esGubernamental && (
+              <>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="No. de licitación"
+                    {...register("no_licitacion", {
+                      maxLength: {
+                        value: 200,
+                        message: "Máximo 200 caracteres",
+                      },
+                    })}
+                    error={!!errors.no_licitacion}
+                    helperText={errors.no_licitacion?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <TextField
+                    fullWidth
+                    label="No. de contrato"
+                    {...register("no_contrato", {
+                      maxLength: {
+                        value: 200,
+                        message: "Máximo 200 caracteres",
+                      },
+                    })}
+                    error={!!errors.no_contrato}
+                    helperText={errors.no_contrato?.message}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
 
           <Divider sx={{ mt: 2, mb: 2 }}>
@@ -722,16 +756,18 @@ export default function FormClientes() {
             </Typography>
           </Divider>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <SelectField
-                name="tipo"
-                label="Tipo de dirección"
-                control={control}
-                rules={{ required: "Debes seleccionar un tipo de dirección" }}
-                errors={errors}
-                options={tiposDireccion}
-              />
-            </Grid>
+            {esDistribuidor && (
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                <SelectField
+                  name="tipo"
+                  label="Tipo de dirección"
+                  control={control}
+                  rules={{ required: "Debes seleccionar un tipo de dirección" }}
+                  errors={errors}
+                  options={tiposDireccion}
+                />
+              </Grid>
+            )}
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <TextField
                 fullWidth

@@ -33,7 +33,7 @@ export default function AsignarTipoCliente({ open, handleClose, id }) {
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Asignar Tipo de Cliente</DialogTitle>
+      <DialogTitle>Asignar el tipo de cliente que podrá visualizar</DialogTitle>
       <form
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"

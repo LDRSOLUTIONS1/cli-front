@@ -16,6 +16,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import PublicIcon from "@mui/icons-material/Public";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { getRolNombre, tienePermisoCard } from "../../utils/roles";
 
 const CLIENTE_CONFIG = {
   1: {
@@ -34,15 +35,6 @@ const CLIENTE_CONFIG = {
     icon: <LocalShippingIcon />,
     gradient: "linear-gradient(135deg, #9333EA, #A855F7)",
   },
-};
-
-const PERMISOS_POR_ROL = {
-  1: [1, 2, 3, 4], // SUPER_ADMIN ve todo
-  2: [1, 2, 3, 4], // ADMINISTRADOR
-  3: [1], // INTERNO
-  4: [2], // EXTERNO
-  5: [3], // GUBERNAMENTAL
-  6: [4], // DISTRIBUIDOR
 };
 
 const DEFAULT_CONFIG = {
@@ -84,7 +76,7 @@ const getClienteConfig = (id) => CLIENTE_CONFIG[id] || DEFAULT_CONFIG;
 const Inicio = () => {
   const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
   const { usuario } = useContext(AuthContext);
-  const rolid = localStorage.getItem("rolid");
+  const rolid = Number(localStorage.getItem("rolid"));
 
   const [saludo, setSaludo] = useState("");
 
@@ -111,8 +103,7 @@ const Inicio = () => {
               variant="subtitle1"
               sx={{ color: "text.secondary", mt: 1 }}
             >
-              Selecciona el tipo de cliente para comenzar a gestionar la
-              información.
+              Soy tipo de usuario {getRolNombre(rolid)}
             </Typography>
           </Box>
 
@@ -129,9 +120,7 @@ const Inicio = () => {
             animate="visible"
           >
             {tipoClientes
-              ?.filter((cliente) =>
-                PERMISOS_POR_ROL[rolid]?.includes(cliente.id),
-              )
+              .filter((cliente) => tienePermisoCard(rolid, cliente.id))
               .map((cliente) => {
                 const { icon, gradient } = getClienteConfig(cliente.id);
 
