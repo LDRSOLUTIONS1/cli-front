@@ -12,7 +12,6 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import LogoutIcon from "@mui/icons-material/Logout";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import { Tooltip, Divider, Grid } from "@mui/material";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { createTheme } from "@mui/material/styles";
@@ -129,15 +128,44 @@ export default function Header({ children }) {
   const router = useMemo(
     () => ({
       pathname: location.pathname,
-      navigate: (path) => navigate(path),
+      navigate: (path) => {
+        if (path === "/volver-intranet") {
+          window.location.href =
+            "https://ldrhsys.ldrhumanresources.com/Cliente/interfaces/Inicio.php";
+          return;
+        }
+
+        if (path === "/cerrar-sesion") {
+          cerrarSesion();
+          return;
+        }
+
+        navigate(path);
+      },
     }),
-    [location.pathname, navigate],
+    [location.pathname, navigate, cerrarSesion],
   );
 
   const rolid = Number(localStorage.getItem("rolid"));
 
   const menuItems = useMemo(() => {
-    return construirMenu(rolid);
+    const baseMenu = construirMenu(rolid);
+
+    return [
+      ...baseMenu,
+      { kind: "divider" },
+
+      {
+        segment: "volver-intranet",
+        title: "Volver a la intranet",
+        icon: <KeyboardReturnIcon />,
+      },
+      {
+        segment: "cerrar-sesion",
+        title: "Cerrar sesión",
+        icon: <LogoutIcon />,
+      },
+    ];
   }, [rolid]);
 
   return (
@@ -150,34 +178,7 @@ export default function Header({ children }) {
         title: "",
       }}
     >
-      <DashboardLayout
-        defaultSidebarCollapsed
-        initialExpandedItems={[]}
-        slots={{
-          sidebarFooter: () => (
-            <Grid container direction="column" alignItems="center" spacing={2}>
-              <Divider />
-              <Tooltip title="Volver a la intranet">
-                <KeyboardReturnIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() =>
-                    window.location.replace(
-                      "https://ldrhsys.ldrhumanresources.com/Cliente/interfaces/Inicio.php",
-                    )
-                  }
-                />
-              </Tooltip>
-
-              <Tooltip title="Cerrar sesión">
-                <LogoutIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={cerrarSesion}
-                />
-              </Tooltip>
-            </Grid>
-          ),
-        }}
-      >
+      <DashboardLayout defaultSidebarCollapsed initialExpandedItems={[]}>
         {children}
       </DashboardLayout>
     </AppProvider>

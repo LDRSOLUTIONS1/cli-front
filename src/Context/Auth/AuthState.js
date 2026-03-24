@@ -94,7 +94,8 @@ const AuthState = (props) => {
           timer: 1500,
           showConfirmButton: false,
         }).then(() => {
-          window.location.href = "/";
+          window.location.href =
+            "/https://ldrhsys.ldrhumanresources.com/default.php";
         });
       }
     });

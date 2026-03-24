@@ -34,6 +34,7 @@ const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
   const regionales = cliente.regionales || [];
   const sucursales = cliente.sucursales || [];
   const conteoSucursales = sucursales.length;
+  const tipocliente = cliente.tipo_cliente_id || {};  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
