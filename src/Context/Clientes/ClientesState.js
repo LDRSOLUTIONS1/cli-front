@@ -13,7 +13,7 @@ import {
   ADD_CLIENTES,
   UPDATE_CLIENTES,
   DELETE_CLIENTES,
-} from "../../types";
+} from "../../types/Index";
 
 const ClientesState = ({ children }) => {
   const initialState = {

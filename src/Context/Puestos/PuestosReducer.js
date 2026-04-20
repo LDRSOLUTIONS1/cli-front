@@ -1,4 +1,4 @@
-import { GET_ALL_PUESTOS, OBTENER_PUESTO } from "../../types";
+import { GET_ALL_PUESTOS, OBTENER_PUESTO } from "../../types/Index";
 
 const PuestosReducer = (state, action) => {
   switch (action.type) {

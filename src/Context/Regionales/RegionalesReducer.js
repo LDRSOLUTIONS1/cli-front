@@ -1,4 +1,4 @@
-import { GET_ALL_REGIONALES, OBTENER_REGIONAL } from "../../types";
+import { GET_ALL_REGIONALES, OBTENER_REGIONAL } from "../../types/Index";
 
 const RegionalesReducer = (state, action) => {
   switch (action.type) {

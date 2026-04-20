@@ -1,4 +1,4 @@
-import { GET_ALL_TIPO_CLIENTES, OBTENER_TIPO_CLIENTE } from "../../types";
+import { GET_ALL_TIPO_CLIENTES, OBTENER_TIPO_CLIENTE } from "../../types/Index";
 
 const TipoClienteReducer = (state, action) => {
   switch (action.type) {

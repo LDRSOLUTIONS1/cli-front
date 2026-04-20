@@ -1,4 +1,4 @@
-import { GET_ALL_CONTACTOS, OBTENER_CONTACTO } from "../../types";
+import { GET_ALL_CONTACTOS, OBTENER_CONTACTO } from "../../types/Index";
 
 const ContactosReducer = (state, action) => {
   switch (action.type) {

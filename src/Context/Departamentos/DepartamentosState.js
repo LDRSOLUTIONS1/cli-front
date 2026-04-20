@@ -13,7 +13,7 @@ import {
   ADD_DEPARTAMENTOS,
   UPDATE_DEPARTAMENTOS,
   DELETE_DEPARTAMENTOS,
-} from "../../types";
+} from "../../types/Index";
 
 const DepartamentosState = ({ children }) => {
   const initialState = {

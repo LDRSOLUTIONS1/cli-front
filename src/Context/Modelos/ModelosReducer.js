@@ -1,4 +1,4 @@
-import { GET_ALL_MODELOS, OBTENER_MODELO } from "../../types";
+import { GET_ALL_MODELOS, OBTENER_MODELO } from "../../types/Index";
 
 const ModelosReducer = (state, action) => {
   switch (action.type) {

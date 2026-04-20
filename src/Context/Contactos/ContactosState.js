@@ -13,7 +13,7 @@ import {
   ADD_CONTACTOS,
   UPDATE_CONTACTOS,
   DELETE_CONTACTOS,
-} from "../../types";
+} from "../../types/Index";
 
 const ContactosState = ({ children }) => {
   const initialState = {

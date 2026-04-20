@@ -13,7 +13,7 @@ import {
   ADD_PUESTOS,
   UPDATE_PUESTOS,
   DELETE_PUESTOS,
-} from "../../types";
+} from "../../types/Index";
 
 const PuestosState = ({ children }) => {
   const initialState = {

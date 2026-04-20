@@ -13,7 +13,7 @@ import {
   ADD_REGIONALES,
   UPDATE_REGIONALES,
   DELETE_REGIONALES,
-} from "../../types";
+} from "../../types/Index";
 
 const RegionalesState = ({ children }) => {
   const initialState = {

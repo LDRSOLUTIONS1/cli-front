@@ -14,7 +14,7 @@ import {
   UPDATE_USUARIOS,
   DELETE_USUARIOS,
   ASIGNAR_TIPO_CLIENTE,
-} from "../../types";
+} from "../../types/Index";
 
 const UsuariosState = ({ children }) => {
   const initialState = {

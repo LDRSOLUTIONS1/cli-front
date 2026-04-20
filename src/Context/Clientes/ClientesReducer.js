@@ -1,4 +1,4 @@
-import { GET_ALL_CLIENTES, OBTENER_CLIENTE } from "../../types";
+import { GET_ALL_CLIENTES, OBTENER_CLIENTE } from "../../types/Index";
 
 const ClientesReducer = (state, action) => {
   switch (action.type) {

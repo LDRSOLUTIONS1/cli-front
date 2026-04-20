@@ -1,4 +1,4 @@
-import { GET_ALL_GRUPOS, OBTENER_GRUPO } from "../../types";
+import { GET_ALL_GRUPOS, OBTENER_GRUPO } from "../../types/Index";
 
 const GruposReducer = (state, action) => {
   switch (action.type) {

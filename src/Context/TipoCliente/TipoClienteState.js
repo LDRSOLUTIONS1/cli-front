@@ -13,7 +13,7 @@ import {
   ADD_TIPO_CLIENTES,
   UPDATE_TIPO_CLIENTES,
   DELETE_TIPO_CLIENTES,
-} from "../../types";
+} from "../../types/Index";
 
 const TipoClienteState = ({ children }) => {
   const initialState = {

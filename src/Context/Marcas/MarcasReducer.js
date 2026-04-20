@@ -1,4 +1,4 @@
-import { GET_ALL_MARCAS, OBTENER_MARCA } from "../../types";
+import { GET_ALL_MARCAS, OBTENER_MARCA } from "../../types/Index";
 
 const MarcasReducer = (state, action) => {
   switch (action.type) {

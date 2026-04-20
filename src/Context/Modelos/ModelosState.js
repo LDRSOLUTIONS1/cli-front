@@ -13,7 +13,7 @@ import {
   ADD_MODELOS,
   UPDATE_MODELOS,
   DELETE_MODELOS,
-} from "../../types";
+} from "../../types/Index";
 
 const ModelosState = ({ children }) => {
   const initialState = {

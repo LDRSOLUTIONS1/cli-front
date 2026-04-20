@@ -1,4 +1,4 @@
-import { GET_ALL_REGIMENES_FISCALES } from "../../types";
+import { GET_ALL_REGIMENES_FISCALES } from "../../types/Index";
 
 const RegimenesFiscalesReducer = (state, action) => {
   switch (action.type) {

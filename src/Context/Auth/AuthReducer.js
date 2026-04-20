@@ -2,7 +2,7 @@ import {
   OBTENER_USUARIO,
   LOGIN_EXITOSO,
   LOGIN_ERROR,
-} from "../../types";
+} from "../../types/Index";
 
 const AuthReducer = (state, action) => {
   switch (action.type) {

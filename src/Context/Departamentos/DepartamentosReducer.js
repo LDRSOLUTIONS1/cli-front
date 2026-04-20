@@ -1,4 +1,4 @@
-import { GET_ALL_DEPARTAMENTOS, OBTENER_DEPARTAMENTO } from "../../types";
+import { GET_ALL_DEPARTAMENTOS, OBTENER_DEPARTAMENTO } from "../../types/Index";
 
 const DepartamentosReducer = (state, action) => {
   switch (action.type) {

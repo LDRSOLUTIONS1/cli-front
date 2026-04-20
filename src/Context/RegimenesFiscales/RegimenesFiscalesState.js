@@ -3,7 +3,7 @@ import RegimenesFiscalesContext from "./RegimenesFiscalesContext";
 import RegimenesFiscalesReducer from "./RegimenesFiscalesReducer";
 import MethodGet from "../../Config/Service";
 import Swal from "sweetalert2";
-import { GET_ALL_REGIMENES_FISCALES } from "../../types";
+import { GET_ALL_REGIMENES_FISCALES } from "../../types/Index";
 
 const RegimenesFiscalesState = ({ children }) => {
   const initialState = {

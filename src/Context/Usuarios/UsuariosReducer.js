@@ -1,4 +1,4 @@
-import { GET_ALL_USERS, OBTENER_USUARIO } from "../../types";
+import { GET_ALL_USERS, OBTENER_USUARIO } from "../../types/Index";
 
 const UsuariosReducer = (state, action) => {
   switch (action.type) {

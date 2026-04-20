@@ -13,7 +13,7 @@ import {
   ADD_GRUPOS,
   UPDATE_GRUPOS,
   DELETE_GRUPOS,
-} from "../../types";
+} from "../../types/Index";
 
 const GruposState = ({ children }) => {
   const initialState = {

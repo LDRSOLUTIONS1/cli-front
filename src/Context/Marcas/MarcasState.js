@@ -13,7 +13,7 @@ import {
   ADD_MARCAS,
   UPDATE_MARCAS,
   DELETE_MARCAS,
-} from "../../types";
+} from "../../types/Index";
 
 const MarcasState = ({ children }) => {
   const initialState = {
