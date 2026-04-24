@@ -34,7 +34,8 @@ const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
   const regionales = cliente.regionales || [];
   const sucursales = cliente.sucursales || [];
   const conteoSucursales = sucursales.length;
-  const tipocliente = cliente.tipo_cliente_id || {};  
+  const tipoCliente = Number(cliente.tipo_cliente_id);
+  const tieneContactos = tipoCliente !== 3;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -98,9 +99,9 @@ const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
           <Tab label="Información" />
           <Tab label="Dirección" />
           <Tab label="Dirección Fiscal" />
-          <Tab label="Contactos" />
-          <Tab label="Modelos" />
-          <Tab label="Regionales" />
+          {tieneContactos && <Tab label="Contactos" />}
+          {tieneContactos && <Tab label="Modelos" />}
+          {tieneContactos && <Tab label="Regionales" />}
           {conteoSucursales > 0 && <Tab label="Sucursales" />}
         </Tabs>
       </Box>
@@ -111,10 +112,24 @@ const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
         {value === 2 && (
           <TabDireccionFiscalCliente direccionFiscal={direccionFiscal} />
         )}
-        {value === 3 && <TabContactosCliente contactos={contactos} />}
-        {value === 4 && <TabModelosCliente modelos={modelos} />}
-        {value === 5 && <TabRegionalesCliente regionales={regionales} />}
-        {value === 6 && conteoSucursales > 0 && (
+
+        {/* CONTACTOS */}
+        {tieneContactos && value === 3 && (
+          <TabContactosCliente contactos={contactos} />
+        )}
+
+        {/* MODELOS */}
+        {tieneContactos && value === 4 && (
+          <TabModelosCliente modelos={modelos} />
+        )}
+
+        {/* REGIONALES */}
+        {tieneContactos && value === 5 && (
+          <TabRegionalesCliente regionales={regionales} />
+        )}
+
+        {/* SUCURSALES */}
+        {value === (tieneContactos ? 6 : 5) && conteoSucursales > 0 && (
           <TabSucursalesCliente sucursales={sucursales} />
         )}
       </DialogContent>

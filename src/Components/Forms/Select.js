@@ -1,6 +1,6 @@
 import React from "react";
 import { Controller } from "react-hook-form";
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, Autocomplete } from "@mui/material";
 
 export default function SelectField({
   name,
@@ -9,7 +9,7 @@ export default function SelectField({
   rules = {},
   errors,
   options = [],
-  disabled,
+  disabled = false,
   optionValue = "id",
   getOptionLabel,
   defaultOption = "Selecciona una opción",
@@ -20,27 +20,38 @@ export default function SelectField({
       control={control}
       defaultValue=""
       rules={rules}
-      render={({ field }) => (
-        <TextField
-          {...field}
-          select
-          fullWidth
-          disabled={disabled}
-          label={label}
-          error={!!errors?.[name]}
-          helperText={errors?.[name]?.message}
-        >
-          <MenuItem value="">
-            <em>{defaultOption}</em>
-          </MenuItem>
+      render={({ field }) => {
+        const selectedOption =
+          options.find(
+            (item) => String(item[optionValue]) === String(field.value),
+          ) || null;
 
-          {options.map((item) => (
-            <MenuItem key={item[optionValue]} value={item[optionValue]}>
-              {getOptionLabel ? getOptionLabel(item) : item.nombre}
-            </MenuItem>
-          ))}
-        </TextField>
-      )}
+        return (
+          <Autocomplete
+            options={options}
+            disabled={disabled}
+            value={selectedOption}
+            onChange={(_, newValue) => {
+              field.onChange(newValue ? newValue[optionValue] : "");
+            }}
+            isOptionEqualToValue={(option, value) =>
+              String(option[optionValue]) === String(value[optionValue])
+            }
+            getOptionLabel={(option) =>
+              getOptionLabel ? getOptionLabel(option) : option?.nombre || ""
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={label}
+                fullWidth
+                error={!!errors?.[name]}
+                helperText={errors?.[name]?.message || defaultOption}
+              />
+            )}
+          />
+        );
+      }}
     />
   );
 }

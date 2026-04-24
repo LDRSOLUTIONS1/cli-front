@@ -9,9 +9,15 @@ export default function MultiSelect({
   options,
   optionLabel = "nombre",
   optionValue = "id",
+  getOptionLabel,
   rules = {},
   errors,
 }) {
+  const getLabel = (item) => {
+    if (getOptionLabel) return getOptionLabel(item);
+    return item[optionLabel];
+  };
+
   return (
     <Controller
       name={name}
@@ -29,7 +35,7 @@ export default function MultiSelect({
             renderValue: (selected) =>
               options
                 .filter((item) => selected.includes(item[optionValue]))
-                .map((item) => item[optionLabel])
+                .map((item) => getLabel(item))
                 .join(", "),
           }}
           error={!!errors?.[name]}
@@ -38,7 +44,7 @@ export default function MultiSelect({
           {options.map((item) => (
             <MenuItem key={item[optionValue]} value={item[optionValue]}>
               <Checkbox checked={field.value?.includes(item[optionValue])} />
-              <ListItemText primary={item[optionLabel]} />
+              <ListItemText primary={getLabel(item)} />
             </MenuItem>
           ))}
         </TextField>

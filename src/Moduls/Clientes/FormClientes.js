@@ -290,6 +290,7 @@ export default function FormClientes() {
     { id: "Activo", nombre: "Activo" },
     { id: "Desarrollo", nombre: "Desarrollo" },
     { id: "Inactivo", nombre: "Inactivo" },
+    { id: "Stand By", nombre: "Stand By" },
   ];
 
   const tiposNegocio = [
@@ -536,14 +537,6 @@ export default function FormClientes() {
                         value: 12,
                         message: "El RFC debe tener al menos 12 caracteres",
                       },
-                      maxLength: {
-                        value: 13,
-                        message: "El RFC debe tener como máximo 13 caracteres",
-                      },
-                      pattern: {
-                        value: /^([A-ZÑ&]{3,4})\d{6}([A-Z\d]{3})$/,
-                        message: "Ingresa un RFC valido",
-                      },
                       onChange: (e) => {
                         e.target.value = e.target.value.toUpperCase().trim();
                       },
@@ -636,7 +629,7 @@ export default function FormClientes() {
                       rules={{ required: "Debes seleccionar una matriz" }}
                       errors={errors}
                       options={clientes}
-                      getOptionLabel={(item) => item.razon_social}
+                      getOptionLabel={(item) => item.nombre_comercial}
                     />
                   </Grid>
                 )}
@@ -656,6 +649,9 @@ export default function FormClientes() {
                     control={control}
                     label="Regionales"
                     options={regionales}
+                    getOptionLabel={(item) =>
+                      `${item.nombre} ${item.apellido_paterno ?? ""} ${item.apellido_materno ?? ""}`.trim()
+                    }
                     rules={{
                       required: "Debes seleccionar al menos una regional",
                     }}
@@ -688,7 +684,6 @@ export default function FormClientes() {
                 label="Teléfono"
                 InputLabelProps={{ shrink: !!watch("telefono") }}
                 {...register("telefono", {
-                  required: "El teléfono es obligatorio",
                   pattern: {
                     value: /^\d{10}$/,
                     message: "El teléfono debe tener 10 dígitos",
@@ -845,15 +840,19 @@ export default function FormClientes() {
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <TextField
-                type="number"
+                type="text"
                 fullWidth
                 label="Código postal"
                 InputLabelProps={{ shrink: !!watch("codigo_postal") }}
                 {...register("codigo_postal", {
                   required: "El código postal es obligatorio",
-                  pattern: {
-                    value: /^\d{5}$/,
-                    message: "El código postal debe tener 5 dígitos",
+                  minLength: {
+                    value: 5,
+                    message: "Mínimo 5 caracteres",
+                  },
+                  maxLength: {
+                    value: 10,
+                    message: "Máximo 10 caracteres",
                   },
                 })}
                 error={!!errors.codigo_postal}
@@ -989,14 +988,18 @@ export default function FormClientes() {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                   <TextField
-                    type="number"
+                    type="text"
                     fullWidth
                     label="Código postal"
                     {...register("fiscal_codigo_postal", {
                       required: "El código postal es obligatorio",
-                      pattern: {
-                        value: /^\d{5}$/,
-                        message: "El código postal debe tener 5 dígitos",
+                      minLength: {
+                        value: 5,
+                        message: "Mínimo 5 caracteres",
+                      },
+                      maxLength: {
+                        value: 10,
+                        message: "Máximo 10 caracteres",
                       },
                     })}
                     error={!!errors.fiscal_codigo_postal}

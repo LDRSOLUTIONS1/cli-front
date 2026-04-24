@@ -62,19 +62,19 @@ export default function TableClientes({ rows = [] }) {
       headerAlign: "center",
       minWidth: 100,
     },
-    {
-      field: "tipo_persona",
-      headerName: "TIPO DE PERSONA",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-      minWidth: 150,
-      type: "singleSelect",
-      valueOptions: [
-        { value: "1", label: "Persona Física" },
-        { value: "2", label: "Persona Moral" },
-      ],
-    },
+    // {
+    //   field: "tipo_persona",
+    //   headerName: "TIPO DE PERSONA",
+    //   flex: 1,
+    //   align: "center",
+    //   headerAlign: "center",
+    //   minWidth: 150,
+    //   type: "singleSelect",
+    //   valueOptions: [
+    //     { value: "1", label: "Persona Física" },
+    //     { value: "2", label: "Persona Moral" },
+    //   ],
+    // },
     {
       field: "nombre_comercial",
       headerName: "NOMBRE COMERCIAL",
@@ -102,6 +102,22 @@ export default function TableClientes({ rows = [] }) {
     {
       field: "plaza",
       headerName: "PLAZA",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "clasificacion",
+      headerName: "CLASIFICACIÓN",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "rfc",
+      headerName: "RFC",
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -175,12 +191,13 @@ export default function TableClientes({ rows = [] }) {
           columns={columns}
           showToolbar
           autoHeight={isMobile}
-          checkboxSelection={!isMobile}
+          //checkboxSelection={!isMobile}
+          heckboxSelection={false}
           disableRowSelectionOnClick
-          pageSizeOptions={[5, 10, 20]}
+          pageSizeOptions={[5, 10, 20, 50, 100]}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 5, page: 0 },
+              paginationModel: { pageSize: 10, page: 0 },
             },
             sorting: {
               sortModel: [{ field: "id", sort: "desc" }],
