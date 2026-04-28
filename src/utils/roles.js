@@ -5,6 +5,7 @@ export const ROLES = {
   4: "Externo",
   5: "Gubernamental",
   6: "Distribuidor",
+  7: "Consultor",
 };
 
 // Obtener nombre del rol
@@ -28,6 +29,7 @@ export const PERMISOS_POR_ROL_CARDS = {
   4: [2], // EXTERNO
   5: [3], // GUBERNAMENTAL
   6: [4], // DISTRIBUIDOR
+  7: [1, 2, 3, 4], // CONSULTOR
 };
 
 export const tienePermisoMenu = (rolid, permiso) => {
@@ -41,4 +43,5 @@ const PERMISOS_POR_ROL_MENU = {
   4: [2], // EXTERNO
   5: [1, 3, 31], // GUBERNAMENTAL
   6: [1, 3, 31, 33, 34, 35, 4, 5, 6], // DISTRIBUIDOR
+  7: [1, 3, 31], // CONSULTOR
 };

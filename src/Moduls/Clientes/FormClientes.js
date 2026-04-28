@@ -602,16 +602,6 @@ export default function FormClientes() {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                   <SelectField
-                    name="estatus"
-                    label="Estatus"
-                    control={control}
-                    rules={{ required: "Debes seleccionar un estatus" }}
-                    errors={errors}
-                    options={tiposEstatus}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                  <SelectField
                     name="tipo_negocio"
                     label="Tipo de negocio"
                     control={control}
@@ -743,6 +733,16 @@ export default function FormClientes() {
                 </Grid>
               </>
             )}
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+              <SelectField
+                name="estatus"
+                label="Estatus"
+                control={control}
+                rules={{ required: "Debes seleccionar un estatus" }}
+                errors={errors}
+                options={tiposEstatus}
+              />
+            </Grid>
           </Grid>
 
           <Divider sx={{ mt: 2, mb: 2 }}>

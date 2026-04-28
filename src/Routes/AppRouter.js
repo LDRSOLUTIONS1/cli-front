@@ -14,6 +14,7 @@ import InternoRoutes from "./InternoRoutes";
 import ExternoRoutes from "./ExternoRoutes";
 import GubernamentalRoutes from "./GubernamentalRoutes";
 import DistribuidoresRoutes from "./DistribuidoresRoutes";
+import ConsultorRoutes from "./ConsultorRoutes";
 
 const AppRouter = () => {
   const { autenticado, usuarioAutenticado, cargando, loginExterno, errorAuth } =
@@ -56,6 +57,7 @@ const AppRouter = () => {
   if (rolid === "4" || rolid === "4") PrivateComponent = ExternoRoutes;
   if (rolid === "5" || rolid === "5") PrivateComponent = GubernamentalRoutes;
   if (rolid === "6" || rolid === "6") PrivateComponent = DistribuidoresRoutes;
+  if (rolid === "7" || rolid === "7") PrivateComponent = ConsultorRoutes;
 
   return (
     <Router>

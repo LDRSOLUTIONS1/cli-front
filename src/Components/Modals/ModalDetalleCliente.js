@@ -22,6 +22,7 @@ import TabRegionalesCliente from "../Tabs/TabRegionalesCliente";
 import TabSucursalesCliente from "../Tabs/TabSucursalesCliente";
 
 const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
+  const rolid = Number(localStorage.getItem("rolid"));
   const theme = useTheme();
   const [value, setValue] = useState(0);
 
@@ -33,105 +34,82 @@ const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
   const modelos = cliente.modelos || [];
   const regionales = cliente.regionales || [];
   const sucursales = cliente.sucursales || [];
-  const conteoSucursales = sucursales.length;
+
   const tipoCliente = Number(cliente.tipo_cliente_id);
   const tieneContactos = tipoCliente !== 3;
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const handleChange = (_, newValue) => setValue(newValue);
+
+  const tabsConfig = [
+    {
+      label: "Información",
+      component: <TabInformacionCliente cliente={cliente} />,
+      visible: true,
+    },
+    {
+      label: "Dirección",
+      component: <TabDireccionCliente direccion={direccion} />,
+      visible: true,
+    },
+    {
+      label: "Dirección Fiscal",
+      component: (
+        <TabDireccionFiscalCliente direccionFiscal={direccionFiscal} />
+      ),
+      visible: rolid !== 7,
+    },
+    {
+      label: "Contactos",
+      component: <TabContactosCliente contactos={contactos} />,
+      visible: rolid !== 7 && tieneContactos,
+    },
+    {
+      label: "Modelos",
+      component: <TabModelosCliente modelos={modelos} />,
+      visible: rolid !== 7 && tieneContactos,
+    },
+    {
+      label: "Regionales",
+      component: <TabRegionalesCliente regionales={regionales} />,
+      visible: rolid !== 7 && tieneContactos,
+    },
+    {
+      label: "Sucursales",
+      component: <TabSucursalesCliente sucursales={sucursales} />,
+      visible: rolid !== 7 && sucursales.length > 0,
+    },
+  ];
+
+  const visibleTabs = tabsConfig.filter((tab) => tab.visible);
 
   return (
-    <Dialog
-      open={modal}
-      onClose={handleClose}
-      maxWidth="xl"
-      fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 3,
-        },
-      }}
-    >
+    <Dialog open={modal} onClose={handleClose} maxWidth="xl" fullWidth>
       <DialogTitle
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
           py: 2,
         }}
       >
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <Stack direction="row" justifyContent="space-between">
           <Typography variant="h6" fontWeight={700}>
             Detalle del cliente
           </Typography>
-
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Stack>
       </DialogTitle>
 
-      <Box
-        sx={{
-          borderBottom: 1,
-          borderColor: "divider",
-          px: { xs: 1, sm: 3 },
-        }}
-      >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="auto"
-          allowScrollButtonsMobile
-          sx={{
-            minHeight: 48,
-            "& .MuiTab-root": {
-              minHeight: 48,
-              textTransform: "none",
-              fontWeight: 600,
-            },
-          }}
-        >
-          <Tab label="Información" />
-          <Tab label="Dirección" />
-          <Tab label="Dirección Fiscal" />
-          {tieneContactos && <Tab label="Contactos" />}
-          {tieneContactos && <Tab label="Modelos" />}
-          {tieneContactos && <Tab label="Regionales" />}
-          {conteoSucursales > 0 && <Tab label="Sucursales" />}
+      <Box sx={{ borderBottom: 1, borderColor: "divider", px: 3 }}>
+        <Tabs value={value} onChange={handleChange} variant="scrollable">
+          {visibleTabs.map((tab, index) => (
+            <Tab key={index} label={tab.label} />
+          ))}
         </Tabs>
       </Box>
 
       <DialogContent sx={{ p: 4 }}>
-        {value === 0 && <TabInformacionCliente cliente={cliente} />}
-        {value === 1 && <TabDireccionCliente direccion={direccion} />}
-        {value === 2 && (
-          <TabDireccionFiscalCliente direccionFiscal={direccionFiscal} />
-        )}
-
-        {/* CONTACTOS */}
-        {tieneContactos && value === 3 && (
-          <TabContactosCliente contactos={contactos} />
-        )}
-
-        {/* MODELOS */}
-        {tieneContactos && value === 4 && (
-          <TabModelosCliente modelos={modelos} />
-        )}
-
-        {/* REGIONALES */}
-        {tieneContactos && value === 5 && (
-          <TabRegionalesCliente regionales={regionales} />
-        )}
-
-        {/* SUCURSALES */}
-        {value === (tieneContactos ? 6 : 5) && conteoSucursales > 0 && (
-          <TabSucursalesCliente sucursales={sucursales} />
-        )}
+        {visibleTabs[value]?.component}
       </DialogContent>
     </Dialog>
   );

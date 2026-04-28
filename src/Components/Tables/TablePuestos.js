@@ -58,6 +58,39 @@ export default function TablePuestos({ rows = [] }) {
 
   const columns = [
     {
+      field: "actions",
+      type: "actions",
+      headerName: "ACCIÓN",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+      getActions: (params) => {
+        const actions = [
+          <GridActionsCellItem
+            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+            label="Ver detalles"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+        ];
+        if (rolid !== 2) {
+          actions.push(
+            <GridActionsCellItem
+              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+              label="Editar"
+              onClick={() => handleClickOpenEdit(params.id)}
+            />,
+            <GridActionsCellItem
+              icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+              label="Eliminar"
+              onClick={() => DeletePuestos(params.id)}
+            />,
+          );
+        }
+        return actions;
+      },
+    },
+    {
       field: "id",
       headerName: "ID",
       flex: 0.5,
@@ -107,39 +140,6 @@ export default function TablePuestos({ rows = [] }) {
       minWidth: 100,
       renderCell: (params) => <EstadoChip estado={params.value} />,
     },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "ACCIÓN",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      minWidth: 100,
-      getActions: (params) => {
-        const actions = [
-          <GridActionsCellItem
-            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-            label="Ver detalles"
-            onClick={() => handleClickOpen(params.id)}
-          />,
-        ];
-        if (rolid !== 2) {
-          actions.push(
-            <GridActionsCellItem
-              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-              label="Editar"
-              onClick={() => handleClickOpenEdit(params.id)}
-            />,
-            <GridActionsCellItem
-              icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-              label="Eliminar"
-              onClick={() => DeletePuestos(params.id)}
-            />,
-          );
-        }
-        return actions;
-      },
-    },
   ];
 
   return (
@@ -167,12 +167,13 @@ export default function TablePuestos({ rows = [] }) {
             columns={columns}
             showToolbar
             autoHeight={isMobile}
-            checkboxSelection={!isMobile}
+            //checkboxSelection={!isMobile}
+            heckboxSelection={false}
             disableRowSelectionOnClick
-            pageSizeOptions={[5, 10, 20]}
+            pageSizeOptions={[5, 10, 20, 50, 100]}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 5, page: 0 },
+                paginationModel: { pageSize: 10, page: 0 },
               },
               sorting: {
                 sortModel: [{ field: "id", sort: "desc" }],

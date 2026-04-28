@@ -3,17 +3,16 @@ import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { esES } from "@mui/x-data-grid/locales";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
 import ClientesContext from "../../Context/Clientes/ClientesContext";
 import ModalDetalleCliente from "../Modals/ModalDetalleCliente";
-import { EstadoChip } from "../../utils/EstadoChip";
+import { EstatusCliente } from "../../utils/EstatusCliente";
 import { useNavigate } from "react-router-dom";
 
 export default function TableClientes({ rows = [] }) {
-  const { cliente, GetCliente, DeleteClientes } = useContext(ClientesContext);
+  const { cliente, GetCliente } = useContext(ClientesContext);
   const rolid = Number(localStorage.getItem("rolid"));
 
   const theme = useTheme();
@@ -30,6 +29,34 @@ export default function TableClientes({ rows = [] }) {
   };
 
   const columns = [
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "ACCIÓN",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+      getActions: (params) => {
+        const actions = [
+          <GridActionsCellItem
+            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+            label="Ver detalles"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+        ];
+        if (rolid !== 2 && rolid !== 7) {
+          actions.push(
+            <GridActionsCellItem
+              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+              label="Editar"
+              onClick={() => navigate(`/Edicion-clientes/${params.id}`)}
+            />,
+          );
+        }
+        return actions;
+      },
+    },
     {
       field: "id",
       headerName: "ID",
@@ -62,19 +89,6 @@ export default function TableClientes({ rows = [] }) {
       headerAlign: "center",
       minWidth: 100,
     },
-    // {
-    //   field: "tipo_persona",
-    //   headerName: "TIPO DE PERSONA",
-    //   flex: 1,
-    //   align: "center",
-    //   headerAlign: "center",
-    //   minWidth: 150,
-    //   type: "singleSelect",
-    //   valueOptions: [
-    //     { value: "1", label: "Persona Física" },
-    //     { value: "2", label: "Persona Moral" },
-    //   ],
-    // },
     {
       field: "nombre_comercial",
       headerName: "NOMBRE COMERCIAL",
@@ -124,46 +138,21 @@ export default function TableClientes({ rows = [] }) {
       minWidth: 100,
     },
     {
-      field: "estado",
-      headerName: "ESTADO",
-      flex: 0.5,
+      field: "telefono",
+      headerName: "TELEFONO",
+      flex: 1,
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      renderCell: (params) => <EstadoChip estado={params.value} />,
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "ACCIÓN",
-      flex: 0.5,
+      field: "estatus",
+      headerName: "ESTATUS",
+      flex: 1,
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      getActions: (params) => {
-        const actions = [
-          <GridActionsCellItem
-            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-            label="Ver detalles"
-            onClick={() => handleClickOpen(params.id)}
-          />,
-        ];
-        if (rolid !== 2) {
-          actions.push(
-            <GridActionsCellItem
-              icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-              label="Editar"
-              onClick={() => navigate(`/Edicion-clientes/${params.id}`)}
-            />,
-            <GridActionsCellItem
-              icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-              label="Eliminar"
-              onClick={() => DeleteClientes(params.id)}
-            />,
-          );
-        }
-        return actions;
-      },
+      renderCell: (params) => <EstatusCliente estado={params.value} />,
     },
   ];
 
@@ -214,7 +203,7 @@ export default function TableClientes({ rows = [] }) {
                 }}
               >
                 <Typography fontWeight={600}>Total: {rows.length}</Typography>
-                {rolid !== 2 && (
+                {rolid !== 2 && rolid !== 7 && (
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}

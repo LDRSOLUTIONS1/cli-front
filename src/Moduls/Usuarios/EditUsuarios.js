@@ -46,6 +46,7 @@ export default function EditUsuarios({ open, handleClose, id }) {
     { id: 4, nombre: "Externo" },
     { id: 5, nombre: "Gubernamental" },
     { id: 6, nombre: "Distribuidor" },
+    { id: 7, nombre: "Consultor" },
   ];
 
   return (

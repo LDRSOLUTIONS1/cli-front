@@ -20,6 +20,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { dateFormatter } from "../../utils/dateFormatter";
 import { EstadoChip } from "../../utils/EstadoChip";
+import { ROLES } from "../../utils/roles";
 
 const ModalDetalleUser = ({ open, handleClose, usuario }) => {
   const theme = useTheme();
@@ -29,15 +30,6 @@ const ModalDetalleUser = ({ open, handleClose, usuario }) => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const ROLES = {
-    1: "Super Admin",
-    2: "Admin",
-    3: "Interno",
-    4: "Externo",
-    5: "Gubernamental",
-    6: "Distribuidor",
   };
 
   return (

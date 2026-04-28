@@ -5,7 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import Layout from "../Layout/Layout";
 import TipoClienteContext from "../../Context/TipoCliente/TipoClienteContext";
 import { useParams } from "react-router-dom";
-import { EstadoChip } from "../../utils/EstadoChip";
+import { EstatusCliente } from "../../utils/EstatusCliente";
 
 const TipoClienteTable = () => {
   const { tipoCliente, GetTipoCliente } = useContext(TipoClienteContext);
@@ -60,19 +60,6 @@ const TipoClienteTable = () => {
       minWidth: 100,
     },
     {
-      field: "tipo_persona",
-      headerName: "TIPO DE PERSONA",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-      minWidth: 150,
-      type: "singleSelect",
-      valueOptions: [
-        { value: "1", label: "Persona Física" },
-        { value: "2", label: "Persona Moral" },
-      ],
-    },
-    {
       field: "nombre_comercial",
       headerName: "NOMBRE COMERCIAL",
       flex: 1,
@@ -96,7 +83,7 @@ const TipoClienteTable = () => {
       headerAlign: "center",
       minWidth: 100,
     },
-
+    
     {
       field: "plaza",
       headerName: "PLAZA",
@@ -106,13 +93,37 @@ const TipoClienteTable = () => {
       minWidth: 100,
     },
     {
-      field: "estado",
-      headerName: "ESTADO",
-      flex: 0.5,
+      field: "clasificacion",
+      headerName: "CLASIFICACIÓN",
+      flex: 1,
       align: "center",
       headerAlign: "center",
       minWidth: 100,
-      renderCell: (params) => <EstadoChip estado={params.value} />,
+    },
+    {
+      field: "rfc",
+      headerName: "RFC",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "telefono",
+      headerName: "TELEFONO",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+    },
+    {
+      field: "estatus",
+      headerName: "ESTATUS",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 100,
+      renderCell: (params) => <EstatusCliente estado={params.value} />,
     },
   ];
 
@@ -141,12 +152,13 @@ const TipoClienteTable = () => {
             columns={columns}
             showToolbar
             autoHeight={isMobile}
-            checkboxSelection={!isMobile}
+            //checkboxSelection={!isMobile}
+            heckboxSelection={false}
             disableRowSelectionOnClick
-            pageSizeOptions={[5, 10, 20]}
+            pageSizeOptions={[5, 10, 20, 50, 100]}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 7, page: 0 },
+                paginationModel: { pageSize: 10, page: 0 },
               },
               sorting: {
                 sortModel: [{ field: "id", sort: "desc" }],

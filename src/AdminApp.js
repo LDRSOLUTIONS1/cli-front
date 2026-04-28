@@ -12,6 +12,7 @@ import DepartamentosState from "./Context/Departamentos/DepartamentosState";
 import RegimenesFiscalesState from "./Context/RegimenesFiscales/RegimenesFiscalesState";
 import AppRouter from "./Routes/AppRouter";
 import UsuariosState from "./Context/Usuarios/UsuariosState";
+import GraficasState from "./Context/Graficas/GraficasState";
 
 function AdminApp() {
   return (
@@ -27,7 +28,9 @@ function AdminApp() {
                       <DepartamentosState>
                         <RegimenesFiscalesState>
                           <UsuariosState>
-                            <AppRouter />
+                            <GraficasState>
+                              <AppRouter />
+                            </GraficasState>
                           </UsuariosState>
                         </RegimenesFiscalesState>
                       </DepartamentosState>

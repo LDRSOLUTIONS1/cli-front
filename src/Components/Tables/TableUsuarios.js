@@ -15,6 +15,7 @@ import AddUsuarios from "../../Moduls/Usuarios/AddUsuarios";
 import { EstadoChip } from "../../utils/EstadoChip";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import AsignarTipoCliente from "../../Moduls/Usuarios/AsignarTipoCliente";
+import { ROLES } from "../../utils/roles";
 
 export default function TableUsuarios({ rows = [] }) {
   const { usuario, GetUsuario, DeleteUsuarios } = useContext(UsuariosContext);
@@ -63,16 +64,49 @@ export default function TableUsuarios({ rows = [] }) {
     saveIdUsuarioAsignar(null);
   };
 
-  const ROLES = {
-    1: "Super Admin",
-    2: "Admin",
-    3: "Interno",
-    4: "Externo",
-    5: "Gubernamental",
-    6: "Distribuidor",
-  };
-
   const columns = [
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "ACCIÓN",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 200,
+      getActions: (params) => {
+        const actions = [
+          <GridActionsCellItem
+            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
+            label="Ver detalles"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+          <GridActionsCellItem
+            icon={<EditIcon sx={{ color: "#ed6c02" }} />}
+            label="Editar"
+            onClick={() => handleClickOpenEdit(params.id)}
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
+            label="Eliminar"
+            onClick={() => DeleteUsuarios(params.id)}
+          />,
+        ];
+        if (
+          params.row.rolid !== 1 &&
+          params.row.rolid !== 2 &&
+          params.row.rolid !== 7
+        ) {
+          actions.push(
+            <GridActionsCellItem
+              icon={<ManageAccountsIcon sx={{ color: "#00ff2f" }} />}
+              label="Asignar tipo de cliente"
+              onClick={() => handleClickOpenAsignar(params.id)}
+            />,
+          );
+        }
+        return actions;
+      },
+    },
     {
       field: "id",
       headerName: "ID",
@@ -148,44 +182,6 @@ export default function TableUsuarios({ rows = [] }) {
       minWidth: 100,
       renderCell: (params) => <EstadoChip estado={params.value} />,
     },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "ACCIÓN",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      minWidth: 200,
-      getActions: (params) => {
-        const actions = [
-          <GridActionsCellItem
-            icon={<VisibilityIcon sx={{ color: "#42A5F5" }} />}
-            label="Ver detalles"
-            onClick={() => handleClickOpen(params.id)}
-          />,
-          <GridActionsCellItem
-            icon={<EditIcon sx={{ color: "#ed6c02" }} />}
-            label="Editar"
-            onClick={() => handleClickOpenEdit(params.id)}
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon sx={{ color: "#d32f2f" }} />}
-            label="Eliminar"
-            onClick={() => DeleteUsuarios(params.id)}
-          />,
-        ];
-        if (params.row.rolid !== 1 && params.row.rolid !== 2) {
-          actions.push(
-            <GridActionsCellItem
-              icon={<ManageAccountsIcon sx={{ color: "#00ff2f" }} />}
-              label="Asignar tipo de cliente"
-              onClick={() => handleClickOpenAsignar(params.id)}
-            />,
-          );
-        }
-        return actions;
-      },
-    },
   ];
 
   return (
@@ -213,12 +209,13 @@ export default function TableUsuarios({ rows = [] }) {
             columns={columns}
             showToolbar
             autoHeight={isMobile}
-            checkboxSelection={!isMobile}
+            //checkboxSelection={!isMobile}
+            heckboxSelection={false}
             disableRowSelectionOnClick
-            pageSizeOptions={[5, 10, 20]}
+            pageSizeOptions={[5, 10, 20, 50, 100]}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 5, page: 0 },
+                paginationModel: { pageSize: 10, page: 0 },
               },
               sorting: {
                 sortModel: [{ field: "id", sort: "desc" }],
