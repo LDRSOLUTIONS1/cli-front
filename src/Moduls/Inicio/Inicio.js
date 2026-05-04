@@ -17,6 +17,8 @@ import PublicIcon from "@mui/icons-material/Public";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { getRolNombre, tienePermisoCard } from "../../utils/roles";
+import GraficasContext from "../../Context/Graficas/GraficasContext";
+import Graficas from "../../Components/Graficas/Graficas";
 
 const CLIENTE_CONFIG = {
   1: {
@@ -77,11 +79,12 @@ const Inicio = () => {
   const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
   const { usuario } = useContext(AuthContext);
   const rolid = Number(localStorage.getItem("rolid"));
-
+  const { CountTipoClientes } = useContext(GraficasContext);
   const [saludo, setSaludo] = useState("");
 
   useEffect(() => {
     GetTipoClientes();
+    CountTipoClientes();
     setSaludo(getSaludo());
   }, []);
 
@@ -223,6 +226,7 @@ const Inicio = () => {
                 );
               })}
           </Grid>
+          <Graficas />
         </Container>
       </Box>
     </Layout>
