@@ -2,6 +2,7 @@ import React, { useContext, useMemo, useRef, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { useTheme } from "@mui/material/styles";
 import GraficasContext from "../../Context/Graficas/GraficasContext";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import {
   Chart as ChartJS,
@@ -20,6 +21,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  ChartDataLabels,
 );
 
 const Graficas = () => {
@@ -83,7 +85,7 @@ const Graficas = () => {
       responsive: true,
       maintainAspectRatio: false,
 
-      animation: {    
+      animation: {
         duration: 1200,
         easing: "easeOutQuart",
       },
@@ -116,6 +118,16 @@ const Graficas = () => {
           bodyColor: textColor,
           borderColor: gridColor,
           borderWidth: 1,
+        },
+        datalabels: {
+          color: textColor,
+          anchor: "end",
+          align: "top",
+          font: {
+            weight: "bold",
+            size: 12,
+          },
+          formatter: (value) => value, 
         },
       },
 

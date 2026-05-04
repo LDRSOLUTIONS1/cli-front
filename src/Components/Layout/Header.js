@@ -18,6 +18,7 @@ import { createTheme } from "@mui/material/styles";
 import AuthContext from "../../Context/Auth/AuthContext";
 import LogoDinamico from "./LogoDinamico";
 import { tienePermisoMenu } from "../../utils/roles";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 
 const theme = createTheme({
   cssVariables: {
@@ -128,6 +129,7 @@ export default function Header({ children }) {
   const router = useMemo(
     () => ({
       pathname: location.pathname,
+
       navigate: (path) => {
         if (path === "/volver-intranet") {
           window.location.href =
@@ -137,6 +139,11 @@ export default function Header({ children }) {
 
         if (path === "/cerrar-sesion") {
           cerrarSesion();
+          return;
+        }
+
+        if (path === "/manual-usuario") {
+          window.open("https://tu-link-del-manual.com", "_blank"); 
           return;
         }
 
@@ -160,6 +167,12 @@ export default function Header({ children }) {
         title: "Volver a la intranet",
         icon: <KeyboardReturnIcon />,
       },
+      {
+        segment: "manual-usuario",
+        title: "Manual de usuario",
+        icon: <MenuBookIcon />,
+      },
+
       {
         segment: "cerrar-sesion",
         title: "Cerrar sesión",
