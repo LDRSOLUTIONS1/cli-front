@@ -152,6 +152,13 @@ export default function TableClientes({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
+      type: "singleSelect",
+      valueOptions: [
+        { value: "Activo", label: "Activo" },
+        { value: "Inactivo", label: "Inactivo" },
+        { value: "Desarrollo", label: "En desarrollo" },
+        { value: "Stand By", label: "Stand By" },
+      ],
       renderCell: (params) => <EstatusCliente estado={params.value} />,
     },
   ];

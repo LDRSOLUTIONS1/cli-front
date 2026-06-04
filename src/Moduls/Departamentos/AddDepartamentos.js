@@ -41,9 +41,9 @@ export default function AddDepartamentos({ open, handleClose }) {
             <Grid size={12}>
               <TextField
                 fullWidth
-                label="Nombre de la marca"
+                label="Nombre del departamento"
                 {...register("nombre", {
-                  required: "El nombre de la marca es obligatorio",
+                  required: "El nombre del departamento es obligatorio",
                   minLength: { value: 1, message: "Mínimo 1 caracteres" },
                   maxLength: { value: 200, message: "Máximo 200 caracteres" },
                 })}

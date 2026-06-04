@@ -95,7 +95,7 @@ export default function TableDepartamentos({ rows = [] }) {
     },
     {
       field: "nombre",
-      headerName: "NOMBRE",
+      headerName: "DEPARTAMENTO",
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -126,6 +126,11 @@ export default function TableDepartamentos({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
+      type: "singleSelect",
+      valueOptions: [
+        { value: 1, label: "Inactivo" },
+        { value: 2, label: "Activo" },
+      ],
       renderCell: (params) => <EstadoChip estado={params.value} />,
     },
   ];

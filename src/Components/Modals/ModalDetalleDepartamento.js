@@ -103,7 +103,7 @@ const ModalDetalleDepartamento = ({ open, handleClose, departamento }) => {
 
               <TableRow>
                 <TableCell>
-                  <strong>Nombre:</strong>
+                  <strong>Departamento:</strong>
                 </TableCell>
                 <TableCell>{departamento.nombre}</TableCell>
               </TableRow>

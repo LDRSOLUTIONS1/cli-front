@@ -108,7 +108,7 @@ export default function TablePuestos({ rows = [] }) {
     },
     {
       field: "nombre",
-      headerName: "NOMBRE",
+      headerName: "PUESTO",
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -138,6 +138,11 @@ export default function TablePuestos({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
+      type: "singleSelect",
+      valueOptions: [
+        { value: 1, label: "Inactivo" },
+        { value: 2, label: "Activo" },
+      ],
       renderCell: (params) => <EstadoChip estado={params.value} />,
     },
   ];

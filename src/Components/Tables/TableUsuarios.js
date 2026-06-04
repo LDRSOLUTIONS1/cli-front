@@ -180,6 +180,11 @@ export default function TableUsuarios({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
+      type: "singleSelect",
+      valueOptions: [
+        { value: 1, label: "Inactivo" },
+        { value: 2, label: "Activo" },
+      ],
       renderCell: (params) => <EstadoChip estado={params.value} />,
     },
   ];

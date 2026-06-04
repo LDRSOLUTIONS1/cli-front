@@ -133,6 +133,11 @@ export default function TableRegionales({ rows = [] }) {
       align: "center",
       headerAlign: "center",
       minWidth: 100,
+      type: "singleSelect",
+      valueOptions: [
+        { value: 1, label: "Inactive" },
+        { value: 2, label: "Active" },
+      ],
       renderCell: (params) => <EstadoChip estado={params.value} />,
     },
   ];
