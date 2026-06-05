@@ -94,7 +94,7 @@ export default function TableMarcas({ rows = [] }) {
     },
     {
       field: "nombre",
-      headerName: "NOMBRE",
+      headerName: "MARCA",
       flex: 1,
       align: "center",
       headerAlign: "center",

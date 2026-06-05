@@ -94,7 +94,7 @@ export default function TableModelos({ rows = [] }) {
     },
     {
       field: "nombre",
-      headerName: "NOMBRE",
+      headerName: "MODELO",
       flex: 1,
       align: "center",
       headerAlign: "center",

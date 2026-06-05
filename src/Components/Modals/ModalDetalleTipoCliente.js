@@ -119,7 +119,7 @@ const ModalDetalleTipoCliente = ({ modal, handleClose, tipoCliente }) => {
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <InfoItem label="Nombre" value={tipoCliente.nombre} />
+              <InfoItem label="Tipo de Cliente" value={tipoCliente.nombre} />
             </Grid>
 
             <Grid item xs={12}>

@@ -102,7 +102,7 @@ export default function TableGrupos({ rows = [] }) {
     },
     {
       field: "nombre",
-      headerName: "NOMBRE",
+      headerName: "GRUPO",
       flex: 1,
       align: "center",
       headerAlign: "center",

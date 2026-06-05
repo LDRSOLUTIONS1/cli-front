@@ -123,7 +123,7 @@ const ModalDetalleGrupo = ({ modal, handleClose, grupo }) => {
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <InfoItem label="Nombre" value={grupo.nombre} />
+              <InfoItem label="Grupo" value={grupo.nombre} />
             </Grid>
 
             <Grid item xs={12}>
