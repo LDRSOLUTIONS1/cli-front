@@ -20,6 +20,7 @@ import TabContactosCliente from "../Tabs/TabContactosCliente";
 import TabModelosCliente from "../Tabs/TabModelosCliente";
 import TabRegionalesCliente from "../Tabs/TabRegionalesCliente";
 import TabSucursalesCliente from "../Tabs/TabSucursalesCliente";
+import TabDocumentosCliente from "../Tabs/TabDocumentosCliente";
 
 const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
   const rolid = Number(localStorage.getItem("rolid"));
@@ -77,6 +78,11 @@ const ModalDetalleCliente = ({ modal, handleClose, cliente }) => {
       label: "Sucursales",
       component: <TabSucursalesCliente sucursales={sucursales} />,
       visible: rolid !== 7 && sucursales.length > 0,
+    },
+    {
+      label: "Documentos",
+      component: <TabDocumentosCliente cliente={cliente} />,
+      visible: tipoCliente === 3,
     },
   ];
 

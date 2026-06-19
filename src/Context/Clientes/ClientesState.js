@@ -14,6 +14,7 @@ import {
   UPDATE_CLIENTES,
   DELETE_CLIENTES,
 } from "../../types/Index";
+import imageHeaders from "../../Config/ImageHeaders";
 
 const ClientesState = ({ children }) => {
   const initialState = {
@@ -71,50 +72,36 @@ const ClientesState = ({ children }) => {
       .catch(handleError);
   };
 
-  const CreateClientes = async (data) => {
-    try {
-      const res = await MethodPost("/clientes", data);
-
-      dispatch({ type: ADD_CLIENTES, payload: res.data });
-
-      await Swal.fire({
-        title: "Éxito",
-        text: "Cliente agregado con éxito",
-        icon: "success",
-      });
-
-      window.location.href = "/clientes";
-
-      GetClientes();
-
-      return res;
-    } catch (error) {
-      handleError(error);
-      throw error;
-    }
+  const CreateClientes = (data) => {
+    MethodPost("/clientesStore", data, imageHeaders)
+      .then((res) => {
+        dispatch({ type: ADD_CLIENTES, payload: res.data });
+        Swal.fire("Listo", "Cliente agregado con éxito", "success").then(() => {
+          window.location.href = "/clientes";
+        });
+        GetClientes();
+      })
+      .catch(handleError);
   };
 
-  const UpdateClientes = async (data) => {
-    try {
-      const res = await MethodPut(`/clientes/${data.id}`, data);
+  const UpdateClientes = (id, data) => {
+    console.log("Data a enviar:", data); // Verificar el contenido de 'data' antes de enviarlo
+    const request =
+      data instanceof FormData
+        ? MethodPost(`/clientesUpdate/${id}`, data, imageHeaders)
+        : MethodPost(`/clientesUpdate/${id}`, data, imageHeaders);
 
-      dispatch({ type: UPDATE_CLIENTES, payload: res.data });
-
-      await Swal.fire({
-        title: "Éxito",
-        text: "Cliente actualizado con éxito",
-        icon: "success",
-      });
-
-      window.location.href = "/clientes";
-
-      GetClientes();
-
-      return res;
-    } catch (error) {
-      handleError(error);
-      throw error;
-    }
+    request
+      .then((res) => {
+        dispatch({ type: UPDATE_CLIENTES, payload: res.data });
+        Swal.fire("Listo", "Cliente actualizado con éxito", "success").then(
+          () => {
+            window.location.href = "/clientes";
+          },
+        );
+        GetClientes();
+      })
+      .catch(handleError);
   };
 
   const DeleteClientes = (id) => {

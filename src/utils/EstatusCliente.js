@@ -4,6 +4,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import BuildIcon from "@mui/icons-material/Build";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 
 const estadoConfig = {
   Activo: {
@@ -25,6 +26,11 @@ const estadoConfig = {
     label: "Stand By",
     color: "info",
     icon: <PauseCircleIcon />,
+  },
+  "No Aplica": {
+    label: "No Aplica",
+    color: "default",
+    icon: <DoNotDisturbIcon  />,
   },
 };
 

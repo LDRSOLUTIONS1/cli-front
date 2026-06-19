@@ -21,6 +21,7 @@ import MarcasContext from "../../Context/Marcas/MarcasContext";
 import { useParams } from "react-router-dom";
 import MethodGet from "../../Config/Service";
 import CircularProgress from "@mui/material/CircularProgress";
+import FileField from "../../Components/Forms/FileField";
 
 export default function FormClientes() {
   const { tipoClientes, GetTipoClientes } = useContext(TipoClienteContext);
@@ -200,7 +201,6 @@ export default function FormClientes() {
 
   const onSubmit = async (data) => {
     if (cargando) return;
-
     setCargando(true);
 
     try {
@@ -223,6 +223,14 @@ export default function FormClientes() {
         fiscal_municipio_id,
         modelo,
         regional,
+        documents,
+        marca_id,
+        tipo_cliente_id,
+        tipo_persona,
+        regimen_fiscal_id,
+        grupo_id,
+        matriz_id,
+        direccion_fiscal_diferente,
         ...rest
       } = data;
 
@@ -238,41 +246,67 @@ export default function FormClientes() {
         municipio_id: Number(municipio_id),
       };
 
-      const payload = {
-        ...rest,
-        marca_id: Number(data.marca_id),
-        tipo_cliente_id: Number(data.tipo_cliente_id),
-        tipo_persona: Number(data.tipo_persona),
-        regimen_fiscal_id: Number(data.regimen_fiscal_id) || null,
-        grupo_id: Number(data.grupo_id) || null,
-        estatus: data.estatus,
-        tipo_negocio: data.tipo_negocio,
-        matriz_id: data.matriz_id ? Number(data.matriz_id) : null,
-        modelo: modelo || [],
-        regional: regional || [],
-        direccion_principal: direccionPrincipal,
-        direccion_fiscal: data.direccion_fiscal_diferente
-          ? {
-              tipo: "Fiscal",
-              calle: fiscal_calle,
-              numero_ext: fiscal_numero_ext,
-              numero_int: fiscal_numero_int,
-              colonia: fiscal_colonia,
-              codigo_postal: fiscal_codigo_postal,
-              pais_id: Number(fiscal_pais_id),
-              estado_id: Number(fiscal_estado_id),
-              municipio_id: Number(fiscal_municipio_id),
-            }
-          : {
-              ...direccionPrincipal,
-              tipo: "Fiscal",
-            },
-      };
+      const direccionFiscal = direccion_fiscal_diferente
+        ? {
+            tipo: "Fiscal",
+            calle: fiscal_calle,
+            numero_ext: fiscal_numero_ext,
+            numero_int: fiscal_numero_int,
+            colonia: fiscal_colonia,
+            codigo_postal: fiscal_codigo_postal,
+            pais_id: Number(fiscal_pais_id),
+            estado_id: Number(fiscal_estado_id),
+            municipio_id: Number(fiscal_municipio_id),
+          }
+        : { ...direccionPrincipal, tipo: "Fiscal" };
+
+      const formData = new FormData();
+
+      Object.entries(rest).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          formData.append(key, value);
+        }
+      });
+
+      formData.append("marca_id", Number(marca_id));
+      formData.append("tipo_cliente_id", Number(tipo_cliente_id));
+      formData.append("tipo_persona", Number(tipo_persona));
+      if (regimen_fiscal_id)
+        formData.append("regimen_fiscal_id", Number(regimen_fiscal_id));
+      if (grupo_id) formData.append("grupo_id", Number(grupo_id));
+      if (matriz_id) formData.append("matriz_id", Number(matriz_id));
+
+      (modelo || []).forEach((item) => formData.append("modelo[]", item));
+      (regional || []).forEach((item) => formData.append("regional[]", item));
+
+      Object.entries(direccionPrincipal).forEach(([key, value]) => {
+        formData.append(`direccion_principal[${key}]`, value ?? "");
+      });
+
+      Object.entries(direccionFiscal).forEach(([key, value]) => {
+        formData.append(`direccion_fiscal[${key}]`, value ?? "");
+      });
+
+      if (documents && typeof documents === "object") {
+        Object.entries(documents).forEach(([type, files]) => {
+          if (Array.isArray(files) && files.length > 0) {
+            files.forEach((file) => {
+              if (file instanceof File) {
+                formData.append(`documents[${type}][]`, file);
+              }
+            });
+          }
+        });
+      }
+
+      deletedDocumentIds.forEach((versionId) => {
+        formData.append("deleted_version_ids[]", versionId);
+      });
 
       if (id) {
-        await UpdateClientes({ id, ...payload });
+        await UpdateClientes(id, formData);
       } else {
-        await CreateClientes(payload);
+        await CreateClientes(formData);
       }
     } catch (error) {
       console.error(error);
@@ -293,6 +327,12 @@ export default function FormClientes() {
     { id: "Stand By", nombre: "Stand By" },
   ];
 
+  const tiposEstatusGub = [
+    { id: "Activo", nombre: "Activo" },
+    { id: "Inactivo", nombre: "Inactivo" },
+    { id: "No Aplica", nombre: "No Aplica" },
+  ];
+
   const tiposNegocio = [
     { id: "Matriz", nombre: "Matriz" },
     { id: "Sucursal", nombre: "Sucursal" },
@@ -303,6 +343,102 @@ export default function FormClientes() {
     { id: "Taller", nombre: "Taller" },
     { id: "Sucursal", nombre: "Sucursal" },
   ];
+
+  const documentTypes = [
+    {
+      key: "convocatoria",
+      label: "Convocatoria",
+    },
+    {
+      key: "bases",
+      label: "Bases",
+    },
+    {
+      key: "anexos",
+      label: "Anexos",
+    },
+    {
+      key: "acta_junta_aclaraciones",
+      label: "Acta de Junta de Aclaraciones",
+    },
+    {
+      key: "acta_presentacion_apertura_proposiciones",
+      label: "Acta de Presentación y Apertura de Proposiciones",
+    },
+    {
+      key: "acta_fallo",
+      label: "Acta de Fallo",
+    },
+    {
+      key: "contrato",
+      label: "Contrato",
+    },
+    {
+      key: "fianza",
+      label: "Fianza (Sostenimiento, Cumplimiento, Vicios Ocultos)",
+    },
+    {
+      key: "acta_entrega",
+      label: "Acta de Entrega",
+    },
+    {
+      key: "facturas",
+      label: "Facturas",
+    },
+    {
+      key: "cancelacion_garantia",
+      label: "Cancelación de Garantía",
+    },
+    {
+      key: "otros",
+      label: "Otros",
+    },
+  ];
+
+  const [clienteDocuments, setClienteDocuments] = useState({});
+  useEffect(() => {
+    if (!cliente) return;
+
+    const baseUrl = (process.env.REACT_APP_BACKEND_URL || "").replace(
+      /\/api$/,
+      "",
+    );
+    const docsMap = {};
+
+    (cliente.documents ?? []).forEach((doc) => {
+      if (!docsMap[doc.type]) {
+        docsMap[doc.type] = [];
+      }
+
+      const versionsOrdenadas = [...(doc.versions ?? [])].sort(
+        (a, b) => b.version - a.version,
+      );
+
+      versionsOrdenadas.forEach((ver) => {
+        docsMap[doc.type].push({
+          id: doc.id,
+          versionId: ver.id,
+          name: ver.original_name ?? doc.name,
+          url: ver.file_path ? `${baseUrl}/storage/${ver.file_path}` : null,
+          version: ver.version,
+        });
+      });
+    });
+
+    setClienteDocuments(docsMap);
+  }, [cliente]);
+
+  const [deletedDocumentIds, setDeletedDocumentIds] = useState([]);
+  const handleDeleteCurrentFile = (versionId) => {
+    setDeletedDocumentIds((prev) => [...prev, versionId]);
+    setClienteDocuments((prev) => {
+      const updated = { ...prev };
+      Object.keys(updated).forEach((type) => {
+        updated[type] = updated[type].filter((f) => f.versionId !== versionId);
+      });
+      return updated;
+    });
+  };
 
   return (
     <Layout>
@@ -731,18 +867,42 @@ export default function FormClientes() {
                     helperText={errors.no_contrato?.message}
                   />
                 </Grid>
+                {documentTypes.map((doc) => (
+                  <Grid key={doc.key} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                    <FileField
+                      name={`documents.${doc.key}`}
+                      label={doc.label}
+                      control={control}
+                      errors={errors}
+                      currentFiles={clienteDocuments[doc.key] ?? []}
+                      onDeleteCurrentFile={handleDeleteCurrentFile}
+                    />
+                  </Grid>
+                ))}
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <SelectField
+                    name="estatus"
+                    label="Estatus"
+                    control={control}
+                    rules={{ required: "Debes seleccionar un estatus" }}
+                    errors={errors}
+                    options={tiposEstatusGub}
+                  />
+                </Grid>
               </>
             )}
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <SelectField
-                name="estatus"
-                label="Estatus"
-                control={control}
-                rules={{ required: "Debes seleccionar un estatus" }}
-                errors={errors}
-                options={tiposEstatus}
-              />
-            </Grid>
+            {!esGubernamental && (
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                <SelectField
+                  name="estatus"
+                  label="Estatus"
+                  control={control}
+                  rules={{ required: "Debes seleccionar un estatus" }}
+                  errors={errors}
+                  options={tiposEstatus}
+                />
+              </Grid>
+            )}
           </Grid>
 
           <Divider sx={{ mt: 2, mb: 2 }}>

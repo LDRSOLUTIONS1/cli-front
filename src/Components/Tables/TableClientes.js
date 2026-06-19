@@ -158,6 +158,7 @@ export default function TableClientes({ rows = [] }) {
         { value: "Inactivo", label: "Inactivo" },
         { value: "Desarrollo", label: "En desarrollo" },
         { value: "Stand By", label: "Stand By" },
+        { value: "No Aplica", label: "No aplica" },
       ],
       renderCell: (params) => <EstatusCliente estado={params.value} />,
     },
