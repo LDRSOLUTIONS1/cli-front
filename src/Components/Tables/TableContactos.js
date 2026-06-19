@@ -15,11 +15,12 @@ import ClientesContext from "../../Context/Clientes/ClientesContext";
 import AddContactos from "../../Moduls/Contactos/AddContactos";
 import EditContactos from "../../Moduls/Contactos/EditContactos";
 import ModalDetalleContacto from "../Modals/ModalDetalleContacto";
+import DownloadIcon from "@mui/icons-material/Download";
 
 export default function TableContactos({ rows = [] }) {
   const rolid = Number(localStorage.getItem("rolid"));
   const { puestos, GetPuestos } = useContext(PuestosContext);
-  const { clientes, GetClientes } = useContext(ClientesContext);
+  const { clientes, GetClientes, handleClickDownload } = useContext(ClientesContext);
   const { contacto, GetContacto, DeleteContactos } =
     useContext(ContactosContext);
 
@@ -215,16 +216,27 @@ export default function TableContactos({ rows = [] }) {
                   }}
                 >
                   <Typography fontWeight={600}>Total: {rows.length}</Typography>
-                  {rolid !== 2 && (
+                  <Box sx={{ display: "flex", gap: 1 }}>
                     <Button
-                      variant="contained"
-                      startIcon={<AddIcon />}
-                      onClick={handleClickOpenAdd}
-                      sx={{ borderRadius: 3 }}
+                      variant="outlined"
+                      color="success"
+                      startIcon={<DownloadIcon />}
+                      onClick={handleClickDownload}
                     >
-                      Nuevo Contacto
+                      Exportar Excel
                     </Button>
-                  )}
+
+                    {rolid !== 2 && (
+                      <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        onClick={handleClickOpenAdd}
+                        sx={{ borderRadius: 3 }}
+                      >
+                        Nuevo Contacto
+                      </Button>
+                    )}
+                  </Box>
                 </Box>
               ),
             }}
