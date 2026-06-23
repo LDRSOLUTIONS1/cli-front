@@ -131,35 +131,6 @@ const ClientesState = ({ children }) => {
     });
   };
 
-  const handleClickDownload = async () => {
-    try {
-      const response = await MethodGet(
-        "/contactos/export/excel",
-        {},
-        {
-          responseType: "blob",
-        },
-      );
-
-      const blob = new Blob([response.data], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-
-      const url = window.URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "contactos.xlsx";
-
-      document.body.appendChild(link);
-      link.click();
-
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      handleError(error);
-    }
-  };
 
   return (
     <ClientesContext.Provider
@@ -173,7 +144,6 @@ const ClientesState = ({ children }) => {
         CreateClientes,
         UpdateClientes,
         DeleteClientes,
-        handleClickDownload,
       }}
     >
       {children}

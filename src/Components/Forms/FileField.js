@@ -5,6 +5,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import Swal from "sweetalert2";
 
 export default function FileField({
   name,
@@ -15,8 +16,25 @@ export default function FileField({
   accept = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.svg",
   disabled = false,
   currentFiles = [],
-  onDeleteCurrentFile, 
+  onDeleteCurrentFile,
 }) {
+  const handleConfirmDelete = (file) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: `Se quitará el archivo "${file.name}"`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onDeleteCurrentFile(file.versionId);
+      }
+    });
+  };
+
   return (
     <Controller
       name={name}
@@ -223,7 +241,7 @@ export default function FileField({
                       <IconButton
                         size="small"
                         color="error"
-                        onClick={() => onDeleteCurrentFile(file.versionId)}
+                        onClick={() => handleConfirmDelete(file)}
                       >
                         <CloseIcon fontSize="small" />
                       </IconButton>

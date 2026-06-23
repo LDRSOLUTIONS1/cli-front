@@ -16,13 +16,19 @@ import AddContactos from "../../Moduls/Contactos/AddContactos";
 import EditContactos from "../../Moduls/Contactos/EditContactos";
 import ModalDetalleContacto from "../Modals/ModalDetalleContacto";
 import DownloadIcon from "@mui/icons-material/Download";
+import UploadIcon from "@mui/icons-material/Upload";
 
 export default function TableContactos({ rows = [] }) {
   const rolid = Number(localStorage.getItem("rolid"));
   const { puestos, GetPuestos } = useContext(PuestosContext);
-  const { clientes, GetClientes, handleClickDownload } = useContext(ClientesContext);
-  const { contacto, GetContacto, DeleteContactos } =
-    useContext(ContactosContext);
+  const { clientes, GetClientes } = useContext(ClientesContext);
+  const {
+    contacto,
+    GetContacto,
+    DeleteContactos,
+    handleClickUpload,
+    handleClickDownload,
+  } = useContext(ContactosContext);
 
   useEffect(() => {
     GetPuestos();
@@ -136,6 +142,14 @@ export default function TableContactos({ rows = [] }) {
       minWidth: 150,
     },
     {
+      field: "extension",
+      headerName: "EXTENSIÓN",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      minWidth: 150,
+    },
+    {
       field: "telefono",
       headerName: "TELÉFONO",
       flex: 1,
@@ -143,6 +157,7 @@ export default function TableContactos({ rows = [] }) {
       headerAlign: "center",
       minWidth: 150,
     },
+
     {
       field: "fecha_registro",
       headerName: "FECHA REGISTRO",
@@ -213,10 +228,30 @@ export default function TableContactos({ rows = [] }) {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 1,
                   }}
                 >
                   <Typography fontWeight={600}>Total: {rows.length}</Typography>
-                  <Box sx={{ display: "flex", gap: 1 }}>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 1,
+                      flexWrap: "wrap",
+                      justifyContent: { xs: "flex-start", sm: "flex-end" },
+                      width: { xs: "100%", sm: "auto" },
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="info"
+                      startIcon={<UploadIcon />}
+                      onClick={handleClickUpload}
+                    >
+                      Importar Excel
+                    </Button>
+
                     <Button
                       variant="outlined"
                       color="success"
