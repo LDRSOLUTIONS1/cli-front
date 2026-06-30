@@ -167,11 +167,11 @@ export default function Header({ children }) {
         title: "Volver a la intranet",
         icon: <KeyboardReturnIcon />,
       },
-      {
-        segment: "manual-usuario",
-        title: "Manual de usuario",
-        icon: <MenuBookIcon />,
-      },
+      // {
+      //   segment: "manual-usuario",
+      //   title: "Manual de usuario",
+      //   icon: <MenuBookIcon />,
+      // },
 
       {
         segment: "cerrar-sesion",
